@@ -1,9 +1,8 @@
 package st.tiy.budgetopgg.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.service.SummonerService;
 
@@ -18,8 +17,10 @@ public class SummonerController {
 	}
 
 	@GetMapping("/{gameName}/{tagLine}")
-	public Summoner getSummoner(@PathVariable String gameName, @PathVariable String tagLine) {
-		return service.getSummoner(gameName, tagLine);
+	public ResponseEntity<Summoner> getSummoner(@PathVariable String gameName, @PathVariable String tagLine) {
+		Summoner summoner = service.getSummoner(gameName, tagLine);
+
+		return ResponseEntity.status(HttpStatus.OK).body(summoner);
 	}
 
 }

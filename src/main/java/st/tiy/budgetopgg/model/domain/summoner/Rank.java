@@ -1,13 +1,28 @@
 package st.tiy.budgetopgg.model.domain.summoner;
 
-public class Rank {
-	public String leagueId;
-	public String queueType;
-	public String tier;
-	public String rank;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
-	public int leaguePoints;
-	public int wins;
-	public int losses;
-	public boolean hotStreak;
+@Entity
+@Getter
+@Setter
+public class Rank {
+
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	private String leagueId;
+	private String queueType;
+	private String tier;
+	private String division;
+
+	private int leaguePoints;
+	private int wins;
+	private int losses;
+	private boolean hotStreak;
+
 }

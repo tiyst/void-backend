@@ -4,9 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 
-@Repository
-public interface SummonerRepository extends JpaRepository<Summoner, Long> {
+import java.util.Optional;
 
-	Summoner findByGameNameAndTagLine(String gameName, String tagLine);
+@Repository
+public interface SummonerRepository extends JpaRepository<Summoner, String> {
+
+	Optional<Summoner> findByGameNameAndTagLine(String gameName, String tagLine);
 
 }

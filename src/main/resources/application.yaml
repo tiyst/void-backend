@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: budgetOpGg
+
+api:
+  key: RGAPI-35bafbb3-7cb5-4314-9c2c-474144e5ebc9
