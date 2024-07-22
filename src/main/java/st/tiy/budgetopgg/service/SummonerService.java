@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.repository.SummonerRepository;
 
+import java.util.Optional;
+
 @Service
 public class SummonerService {
 
@@ -15,16 +17,16 @@ public class SummonerService {
 		this.repository = repository;
 	}
 
-	public Summoner getSummoner(String gameName, String tagLine) {
-		Summoner summoner = repository.getByGameNameAndTagLine(gameName, tagLine);
+	public Optional<Summoner> getSummoner(String gameName, String tagLine) {
+		Optional<Summoner> summonerOptional = repository.findByGameNameAndTagLine(gameName, tagLine);
 
-		if (summoner == null) {
+		if (summonerOptional == null) {
 			// TODO call Riot API with BASE_URL + GameName + TagLine;
 			// TODO save to repo
 			// TODO summoner = newly found
 		}
 
-		return summoner;
+		return summonerOptional;
 	}
 
 }
