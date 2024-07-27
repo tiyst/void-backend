@@ -1,10 +1,10 @@
 package st.tiy.budgetopgg.model.mapper;
 
+import com.riotgames.model.SummonerDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
-import st.tiy.budgetopgg.model.riot.SummonerDTO;
 
 @Mapper(componentModel = "spring")
 public interface SummonerDtoSummonerMapper {

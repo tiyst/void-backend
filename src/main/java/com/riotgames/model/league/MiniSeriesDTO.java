@@ -1,4 +1,4 @@
-package st.tiy.budgetopgg.model.riot.league;
+package com.riotgames.model.league;
 
 import lombok.Getter;
 import lombok.Setter;

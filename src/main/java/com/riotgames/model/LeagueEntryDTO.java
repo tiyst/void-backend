@@ -1,8 +1,8 @@
-package st.tiy.budgetopgg.model.riot;
+package com.riotgames.model;
 
+import com.riotgames.model.league.MiniSeriesDTO;
 import lombok.Getter;
 import lombok.Setter;
-import st.tiy.budgetopgg.model.riot.league.MiniSeriesDTO;
 
 @Getter
 @Setter

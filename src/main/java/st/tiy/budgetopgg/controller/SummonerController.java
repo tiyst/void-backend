@@ -7,7 +7,7 @@ import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.service.SummonerService;
 
 @RestController
-@RequestMapping("/summoner")
+@RequestMapping("/api/summoner")
 public class SummonerController {
 
 	private final SummonerService service;

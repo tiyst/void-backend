@@ -1,4 +1,4 @@
-package st.tiy.budgetopgg.model.riot.match;
+package com.riotgames.model.match;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

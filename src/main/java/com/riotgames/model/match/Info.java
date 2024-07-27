@@ -1,4 +1,4 @@
-package st.tiy.budgetopgg.model.riot.match;
+package com.riotgames.model.match;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +19,9 @@ public class Info {
 	private String gameType;
 	private String gameVersion;
 	private int mapId;
-	private ArrayList<Participant> participants;
+	private ArrayList<ParticipantDto> participantDtos;
 	private String platformId;
 	private int queueId;
-	private ArrayList<Team> teams;
+	private ArrayList<TeamDto> teamDtos;
 	private String tournamentCode;
 }

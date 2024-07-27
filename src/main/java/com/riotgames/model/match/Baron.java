@@ -1,11 +1,11 @@
-package st.tiy.budgetopgg.model.riot.match;
+package com.riotgames.model.match;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Inhibitor {
+public class Baron {
 	private boolean first;
 	private int kills;
 }

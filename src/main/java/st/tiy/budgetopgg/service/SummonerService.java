@@ -1,13 +1,13 @@
 package st.tiy.budgetopgg.service;
 
+import com.riotgames.model.AccountDto;
+import com.riotgames.model.SummonerDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.AccountDtoSummonerMapper;
 import st.tiy.budgetopgg.model.mapper.SummonerDtoSummonerMapper;
-import st.tiy.budgetopgg.model.riot.AccountDto;
-import st.tiy.budgetopgg.model.riot.SummonerDTO;
 import st.tiy.budgetopgg.repository.SummonerRepository;
 
 import java.util.Optional;
@@ -20,40 +20,54 @@ public class SummonerService {
 
 	private final String API_KEY;
 
+	private MatchService matchService;
 	private SummonerRepository repository;
 	private AccountDtoSummonerMapper accountDtoMapper;
 	private SummonerDtoSummonerMapper summonerDtoMapper;
 
-	public SummonerService(@Value("${api.key}") String apiKey, SummonerRepository repository,
+	private RestTemplate restTemplate;
+
+	public SummonerService(@Value("${api.key}") String apiKey,
+	                       MatchService matchService,
+	                       SummonerRepository repository,
 	                       AccountDtoSummonerMapper accountDtoMapper,
-	                       SummonerDtoSummonerMapper summonerDtoMapper) {
+	                       SummonerDtoSummonerMapper summonerDtoMapper,
+	                       RestTemplate restTemplate) {
 		API_KEY = apiKey;
+		this.matchService = matchService;
 		this.repository = repository;
 		this.accountDtoMapper = accountDtoMapper;
 		this.summonerDtoMapper = summonerDtoMapper;
+		this.restTemplate = restTemplate;
 	}
 
 	public Summoner getSummoner(String gameName, String tagLine) {
 		Optional<Summoner> cachedSummoner = repository.findByGameNameAndTagLine(gameName, tagLine);
 
 		if (cachedSummoner.isEmpty()) {
-			RestTemplate restTemplate = new RestTemplate();
-			String query = ACCOUNT_BASE_URL + gameName + "/" + tagLine + "?api_key=" + API_KEY;
-			AccountDto response = restTemplate.getForObject(query, AccountDto.class);
-
-			Summoner summoner = accountDtoMapper.mapAccountDtoToSummoner(response);
-
-			query = SUMMONER_BASE_URL + summoner.getPuuid() + "?api_key=" + API_KEY;
-			SummonerDTO summonerResponse = restTemplate.getForObject(query, SummonerDTO.class);
-			summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
-
-			return summoner;
-
-			// TODO save to repo
-			// TODO cachedSummoner = newly found
+			return pullSummonerData(gameName, tagLine);
 		}
 
 		return cachedSummoner.orElse(null);
+	}
+
+	private Summoner pullSummonerData(String gameName, String tagLine) {
+		String query = ACCOUNT_BASE_URL + gameName + "/" + tagLine + "?api_key=" + API_KEY;
+		AccountDto response = restTemplate.getForObject(query, AccountDto.class);
+
+		Summoner summoner = accountDtoMapper.mapAccountDtoToSummoner(response);
+
+		query = SUMMONER_BASE_URL + summoner.getPuuid() + "?api_key=" + API_KEY;
+		SummonerDTO summonerResponse = restTemplate.getForObject(query, SummonerDTO.class);
+		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
+
+		this.matchService.getMatchesBySummoner(summoner);
+		// TODO CALL TO MATCH SERVICE
+
+		// TODO save to repo
+		// TODO cachedSummoner = newly found
+
+		return summoner;
 	}
 
 }
