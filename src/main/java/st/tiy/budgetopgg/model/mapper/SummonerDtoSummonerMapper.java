@@ -11,6 +11,7 @@ public interface SummonerDtoSummonerMapper {
 
 	@Mapping(source = "profileIconId", target = "profileIcon")
 	@Mapping(source = "summonerLevel", target = "level")
+	@Mapping(source = "id", target = "summonerId")
 	@Mapping(target = "puuid", ignore = true)
 	Summoner mapSummonerDtoToSummoner(SummonerDTO source, @MappingTarget Summoner summoner);
 

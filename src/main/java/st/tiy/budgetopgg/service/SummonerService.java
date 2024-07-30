@@ -20,10 +20,10 @@ public class SummonerService {
 
 	private final String API_KEY;
 
-	private MatchService matchService;
-	private SummonerRepository repository;
-	private AccountDtoSummonerMapper accountDtoMapper;
-	private SummonerDtoSummonerMapper summonerDtoMapper;
+	private final MatchService matchService;
+	private final SummonerRepository repository;
+	private final AccountDtoSummonerMapper accountDtoMapper;
+	private final SummonerDtoSummonerMapper summonerDtoMapper;
 
 	private RestTemplate restTemplate;
 
@@ -62,7 +62,8 @@ public class SummonerService {
 		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
 
 		this.matchService.getMatchesBySummoner(summoner);
-		// TODO CALL TO MATCH SERVICE
+
+		// TODO CALL TO RANK SERVICE
 
 		// TODO save to repo
 		// TODO cachedSummoner = newly found
