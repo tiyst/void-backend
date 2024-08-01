@@ -27,7 +27,7 @@ public class Summoner {
 	private int profileIcon;
 	private long level;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Rank> rank;
 
 }

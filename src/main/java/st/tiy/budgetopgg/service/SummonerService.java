@@ -5,11 +5,13 @@ import com.riotgames.model.SummonerDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import st.tiy.budgetopgg.model.domain.summoner.Rank;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.AccountDtoSummonerMapper;
 import st.tiy.budgetopgg.model.mapper.SummonerDtoSummonerMapper;
 import st.tiy.budgetopgg.repository.SummonerRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,7 @@ public class SummonerService {
 	private final String API_KEY;
 
 	private final MatchService matchService;
+	private final RankService rankService;
 	private final SummonerRepository repository;
 	private final AccountDtoSummonerMapper accountDtoMapper;
 	private final SummonerDtoSummonerMapper summonerDtoMapper;
@@ -29,12 +32,14 @@ public class SummonerService {
 
 	public SummonerService(@Value("${api.key}") String apiKey,
 	                       MatchService matchService,
+	                       RankService rankService,
 	                       SummonerRepository repository,
 	                       AccountDtoSummonerMapper accountDtoMapper,
 	                       SummonerDtoSummonerMapper summonerDtoMapper,
 	                       RestTemplate restTemplate) {
 		API_KEY = apiKey;
 		this.matchService = matchService;
+		this.rankService = rankService;
 		this.repository = repository;
 		this.accountDtoMapper = accountDtoMapper;
 		this.summonerDtoMapper = summonerDtoMapper;
@@ -63,12 +68,10 @@ public class SummonerService {
 
 		this.matchService.getMatchesBySummoner(summoner);
 
-		// TODO CALL TO RANK SERVICE
+		List<Rank> rank = this.rankService.getRanksBySummonerId(summoner.getSummonerId());
+		summoner.setRank(rank);
 
-		// TODO save to repo
-		// TODO cachedSummoner = newly found
-
-		return summoner;
+		return repository.save(summoner);
 	}
 
 }
