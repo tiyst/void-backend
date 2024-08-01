@@ -10,7 +10,7 @@ import st.tiy.budgetopgg.model.mapper.RotationMapper;
 @Service
 public class RotationService {
 
-	private static final String ROTATION_BASE_URL = "https://eun1.api.riotgames.com/lol/platform/v3/champion-rotations";
+	private static final String ROTATION_BASE_URL = "https://eun1.api.riotgames.com/lol/platform/v3/champion-rotations?api_key={api_key}";
 
 	private final String API_KEY;
 
@@ -26,7 +26,9 @@ public class RotationService {
 	}
 
 	public Rotation getCurrentWeekRotation() {
-		ChampionInfo response = restTemplate.getForObject(ROTATION_BASE_URL + "?api_key=" + this.API_KEY, ChampionInfo.class);
+		String url = ROTATION_BASE_URL.replace("{api_key}", this.API_KEY);
+
+		ChampionInfo response = restTemplate.getForObject(url, ChampionInfo.class);
 
 		return rotationMapper.mapToRotation(response);
 	}

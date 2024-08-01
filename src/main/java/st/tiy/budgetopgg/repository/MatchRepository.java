@@ -1,12 +1,13 @@
 package st.tiy.budgetopgg.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import st.tiy.budgetopgg.model.domain.Match;
+import org.springframework.stereotype.Repository;
+import st.tiy.budgetopgg.model.domain.match.Match;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface MatchRepository extends JpaRepository<Match, String> {
+@Repository
+public interface MatchRepository extends JpaRepository<Match, String>{
 
-	List<Match> findAllByPlayersPuuidsContaining(String puuid);
-
+	Optional<Match> findById(String matchId);
 }

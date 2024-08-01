@@ -24,20 +24,22 @@ public class SummonerService {
 	private final SummonerRepository repository;
 	private final AccountDtoSummonerMapper accountDtoMapper;
 	private final SummonerDtoSummonerMapper summonerDtoMapper;
+	private final RankService rankService;
 
 	private RestTemplate restTemplate;
 
 	public SummonerService(@Value("${api.key}") String apiKey,
-	                       MatchService matchService,
-	                       SummonerRepository repository,
-	                       AccountDtoSummonerMapper accountDtoMapper,
-	                       SummonerDtoSummonerMapper summonerDtoMapper,
-	                       RestTemplate restTemplate) {
+						   MatchService matchService,
+						   SummonerRepository repository,
+						   AccountDtoSummonerMapper accountDtoMapper,
+						   SummonerDtoSummonerMapper summonerDtoMapper, RankService rankService,
+						   RestTemplate restTemplate) {
 		API_KEY = apiKey;
 		this.matchService = matchService;
 		this.repository = repository;
 		this.accountDtoMapper = accountDtoMapper;
 		this.summonerDtoMapper = summonerDtoMapper;
+		this.rankService = rankService;
 		this.restTemplate = restTemplate;
 	}
 
@@ -64,10 +66,12 @@ public class SummonerService {
 		this.matchService.getMatchesBySummoner(summoner);
 
 		// TODO CALL TO RANK SERVICE
+		this.rankService.getRanksBySummonerId(summoner.getSummonerId());
 
 		// TODO save to repo
-		// TODO cachedSummoner = newly found
+		repository.save(summoner);
 
+		// TODO cachedSummoner = newly found
 		return summoner;
 	}
 

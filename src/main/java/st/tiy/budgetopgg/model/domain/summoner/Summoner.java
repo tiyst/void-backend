@@ -30,4 +30,11 @@ public class Summoner {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Rank> rank;
 
+	public void addRank(Rank rank) {
+		this.rank.add(rank);
+	}
+
+	public void clearRanks() {
+		this.rank.clear();
+	}
 }

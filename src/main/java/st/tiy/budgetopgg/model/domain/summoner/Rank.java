@@ -19,7 +19,6 @@ public class Rank {
 	private String queueType;
 	private String tier;
 	private String division;
-
 	private int leaguePoints;
 	private int wins;
 	private int losses;
