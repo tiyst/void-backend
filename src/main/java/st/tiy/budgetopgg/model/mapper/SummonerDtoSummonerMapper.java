@@ -12,7 +12,14 @@ public interface SummonerDtoSummonerMapper {
 	@Mapping(source = "profileIconId", target = "profileIcon")
 	@Mapping(source = "summonerLevel", target = "level")
 	@Mapping(source = "id", target = "summonerId")
+
 	@Mapping(target = "puuid", ignore = true)
+	@Mapping(target = "lastUpdated", ignore = true)
+	@Mapping(target = "gameName", ignore = true)
+	@Mapping(target = "tagLine", ignore = true)
+	@Mapping(target = "server", ignore = true)
+	@Mapping(target = "rank", ignore = true)
+
 	Summoner mapSummonerDtoToSummoner(SummonerDTO source, @MappingTarget Summoner summoner);
 
 }
