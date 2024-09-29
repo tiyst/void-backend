@@ -2,6 +2,10 @@ package st.tiy.budgetopgg.service;
 
 import com.riotgames.model.LeagueEntryDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
@@ -15,13 +19,11 @@ import java.util.List;
 @Service
 public class RankService {
 
-	public static final String RANK_BASE_URL = "https://eun1.api.riotgames.com/lol/league/v4/entries/by-summoner/%s?api_key=%s";
+	public static final String RANK_BASE_URL = "https://eun1.api.riotgames.com/lol/league/v4/entries/by-summoner/%s";
 
 	private final String API_KEY;
-
 	private final RestTemplate restTemplate;
 	private final RankMapper rankMapper;
-
 	private final RankRepository rankRepository;
 
 	public RankService(@Value("${api.key}") String apiKey,
@@ -35,15 +37,22 @@ public class RankService {
 	}
 
 	public List<Rank> getRanksBySummonerId(String summonerId) {
-		String url = String.format(RANK_BASE_URL, summonerId, API_KEY);
-		LeagueEntryDTO[] response = restTemplate.getForObject(url, LeagueEntryDTO[].class);
+		String url = String.format(RANK_BASE_URL, summonerId);
 
-		if (response == null) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("X-Riot-Token", API_KEY);
+
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<LeagueEntryDTO[]> response = restTemplate.exchange(
+				url, HttpMethod.GET, entity, LeagueEntryDTO[].class);
+
+		if (response.getBody() == null) {
 			return Collections.emptyList();
 		}
 
-		return Arrays.stream(response)
-				.map(this.rankMapper::mapToRank)
+		return Arrays.stream(response.getBody())
+				.map(rankMapper::mapToRank)
 				.toList();
 	}
 

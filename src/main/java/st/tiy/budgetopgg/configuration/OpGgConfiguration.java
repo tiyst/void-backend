@@ -12,5 +12,4 @@ public class OpGgConfiguration {
 		return new RestTemplate();
 	}
 
-
 }

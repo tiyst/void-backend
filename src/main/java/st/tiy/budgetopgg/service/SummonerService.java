@@ -3,6 +3,10 @@ package st.tiy.budgetopgg.service;
 import com.riotgames.model.AccountDto;
 import com.riotgames.model.SummonerDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
@@ -21,7 +25,6 @@ public class SummonerService {
 	public static final String SUMMONER_BASE_URL = "https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/";
 
 	private final String API_KEY;
-
 	private final MatchService matchService;
 	private final RankService rankService;
 	private final SummonerRepository repository;
@@ -57,21 +60,29 @@ public class SummonerService {
 	}
 
 	private Summoner pullSummonerData(String gameName, String tagLine) {
-		String query = ACCOUNT_BASE_URL + gameName + "/" + tagLine + "?api_key=" + API_KEY;
-		AccountDto response = restTemplate.getForObject(query, AccountDto.class);
+		String url = ACCOUNT_BASE_URL + gameName + "/" + tagLine;
 
-		Summoner summoner = accountDtoMapper.mapAccountDtoToSummoner(response);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("X-Riot-Token", API_KEY);
 
-		query = SUMMONER_BASE_URL + summoner.getPuuid() + "?api_key=" + API_KEY;
-		SummonerDTO summonerResponse = restTemplate.getForObject(query, SummonerDTO.class);
-		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<AccountDto> response = restTemplate.exchange(
+				url, HttpMethod.GET, entity, AccountDto.class);
+
+		Summoner summoner = accountDtoMapper.mapAccountDtoToSummoner(response.getBody());
+
+		url = SUMMONER_BASE_URL + summoner.getPuuid();
+
+		ResponseEntity<SummonerDTO> summonerResponse = restTemplate.exchange(
+				url, HttpMethod.GET, entity, SummonerDTO.class);
+
+		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse.getBody(), summoner);
 
 		this.matchService.getMatchesBySummoner(summoner);
-
 		List<Rank> rank = this.rankService.getRanksBySummonerId(summoner.getSummonerId());
 		summoner.setRank(rank);
 
 		return repository.save(summoner);
 	}
-
 }
