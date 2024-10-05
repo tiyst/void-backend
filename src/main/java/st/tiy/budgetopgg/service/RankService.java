@@ -46,7 +46,7 @@ public class RankService {
 		return pullRankDataFromRiotApi(summonerId);
 	}
 
-	public List<Rank> updateRanks(String summonerId) {
+	public List<Rank> updateRanks(String summonerId) { // unnecessary method
 		return pullRankDataFromRiotApi(summonerId); // Call RiotAPI and update repository
 	}
 
@@ -69,7 +69,8 @@ public class RankService {
 				.map(rankMapper::mapToRank)
 				.toList();
 
-		rankRepository.saveAll(updatedRanks);
+		// unnecessary, cascaded when saving summoner due to cascade = CascadeType.ALL
+//		rankRepository.saveAll(updatedRanks);
 
 		return updatedRanks;
 	}

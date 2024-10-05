@@ -28,6 +28,7 @@ public class RankController {
 		return this.rankService.pullRankDataFromRiotApi(summonerId);
 	}
 
+	@GetMapping("/update") //GetMapping missing in an endpoint method (useless method anyway)
 	public ResponseEntity<List<Rank>> updateRanksBySummonerId(@RequestParam(name = "summonerId") String summonerId) {
 		List<Rank> updatedRanks = rankService.updateRanks(summonerId); // Explicitly fetch fresh data from RiotAPI
 

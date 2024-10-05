@@ -10,7 +10,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import st.tiy.budgetopgg.model.domain.Match;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.AccountDtoSummonerMapper;
@@ -51,14 +50,19 @@ public class SummonerService {
 		this.restTemplate = restTemplate;
 	}
 
+	//public method above private
+	public Summoner updateSummonerData(String gameName, String tagLine) {
+		Summoner updatedSummoner = pullSummonerData(gameName, tagLine);
+
+		updateRankAndMatch(updatedSummoner);
+
+		return updatedSummoner;
+	}
+
 	public Summoner getSummoner(String gameName, String tagLine) {
 		Optional<Summoner> cachedSummoner = repository.findByGameNameAndTagLine(gameName, tagLine);
 
-		if (cachedSummoner.isEmpty()) {
-			return pullSummonerData(gameName, tagLine);
-		}
-
-		return cachedSummoner.orElse(null);
+		return cachedSummoner.orElse(pullSummonerData(gameName, tagLine));
 	}
 
 	private Summoner pullSummonerData(String gameName, String tagLine) {
@@ -88,20 +92,13 @@ public class SummonerService {
 		return repository.save(summoner);
 	}
 
-	public Summoner updateSummonerData(String gameName, String tagLine) {
-		Summoner updatedSummoner = pullSummonerData(gameName, tagLine);
-
-		updateRankAndMatch(updatedSummoner);
-
-		return updatedSummoner;
-	}
-
-	private void updateRankAndMatch(Summoner summoner) {
+	private void updateRankAndMatch(Summoner summoner) { //unnecessary method, this can be done in riot data pull
 		List<Rank> updatedRanks = rankService.updateRanks(summoner.getSummonerId());
 		summoner.setRank(updatedRanks);
 
 		List<MatchDto> updatedMatches = matchService.updateMatches(summoner.getPuuid());
-		summoner.setMatches(updatedMatches);
+		// idk if we wanna save matches to summoner domain object
+		// summoner.setMatches(updatedMatches);
 
 		repository.save(summoner);
 	}

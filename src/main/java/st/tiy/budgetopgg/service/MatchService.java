@@ -34,6 +34,7 @@ public class MatchService {
 	}
 
 	public List<Match> getMatchesBySummoner(Summoner summoner) {
+		// missing transorm to DTO objects (feel free to return match, we'll dto-ify app later)
 		return getMatchesByPuuid(summoner.getPuuid());
 	}
 
@@ -68,7 +69,9 @@ public class MatchService {
 				.map(this::pullMatchByMatchId)
 				.toList();
 
-		matchRepository.saveAll(updatedMatches);
+		// Can't save DTO objects / can't save objects without @Entity and @Id / it's a foreign dto object / we'll do later
+		// unnecessary to touch / design domain objects
+//		matchRepository.saveAll(updatedMatches);
 
 		return updatedMatches;
 	}
@@ -87,7 +90,7 @@ public class MatchService {
 		return response.getBody();
 	}
 
-	public List<MatchDto> updateMatches(String puuid) {
+	public List<MatchDto> updateMatches(String puuid) { // unnecessary method
 		return pullNewMatchesByPuuid(puuid);
 	}
 }
