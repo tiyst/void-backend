@@ -37,6 +37,20 @@ public class RankService {
 	}
 
 	public List<Rank> getRanksBySummonerId(String summonerId) {
+		List<Rank> cachedRanks = rankRepository.findBySummonerId(summonerId);
+
+		if (!cachedRanks.isEmpty()) {
+			return cachedRanks;
+		}
+
+		return pullRankDataFromRiotApi(summonerId);
+	}
+
+	public List<Rank> updateRanks(String summonerId) {
+		return pullRankDataFromRiotApi(summonerId); // Call RiotAPI and update repository
+	}
+
+	public List<Rank> pullRankDataFromRiotApi(String summonerId) {
 		String url = String.format(RANK_BASE_URL, summonerId);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -51,9 +65,13 @@ public class RankService {
 			return Collections.emptyList();
 		}
 
-		return Arrays.stream(response.getBody())
+		List<Rank> updatedRanks = Arrays.stream(response.getBody())
 				.map(rankMapper::mapToRank)
 				.toList();
+
+		rankRepository.saveAll(updatedRanks);
+
+		return updatedRanks;
 	}
 
 }

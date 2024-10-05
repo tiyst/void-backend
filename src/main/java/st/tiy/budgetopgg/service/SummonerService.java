@@ -1,6 +1,7 @@
 package st.tiy.budgetopgg.service;
 
 import com.riotgames.model.AccountDto;
+import com.riotgames.model.MatchDto;
 import com.riotgames.model.SummonerDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import st.tiy.budgetopgg.model.domain.Match;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.AccountDtoSummonerMapper;
@@ -80,9 +82,27 @@ public class SummonerService {
 		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse.getBody(), summoner);
 
 		this.matchService.getMatchesBySummoner(summoner);
-		List<Rank> rank = this.rankService.getRanksBySummonerId(summoner.getSummonerId());
+		List<Rank> rank = this.rankService.pullRankDataFromRiotApi(summoner.getSummonerId());
 		summoner.setRank(rank);
 
 		return repository.save(summoner);
+	}
+
+	public Summoner updateSummonerData(String gameName, String tagLine) {
+		Summoner updatedSummoner = pullSummonerData(gameName, tagLine);
+
+		updateRankAndMatch(updatedSummoner);
+
+		return updatedSummoner;
+	}
+
+	private void updateRankAndMatch(Summoner summoner) {
+		List<Rank> updatedRanks = rankService.updateRanks(summoner.getSummonerId());
+		summoner.setRank(updatedRanks);
+
+		List<MatchDto> updatedMatches = matchService.updateMatches(summoner.getPuuid());
+		summoner.setMatches(updatedMatches);
+
+		repository.save(summoner);
 	}
 }

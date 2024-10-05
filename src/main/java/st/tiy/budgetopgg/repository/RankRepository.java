@@ -9,6 +9,6 @@ public interface RankRepository extends JpaRepository<Rank, Long> {
 
 	List<Rank> findBySummonerPuuid(String puuid);
 
-	List<Rank> findBySummonerSummonerId(String summonerId);
+	List<Rank> findBySummonerId(String summonerId);
 
 }

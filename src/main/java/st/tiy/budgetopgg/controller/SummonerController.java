@@ -23,4 +23,11 @@ public class SummonerController {
 		return ResponseEntity.status(HttpStatus.OK).body(summoner);
 	}
 
+	@GetMapping("/{gameName}/{tagLine}/update")
+	public ResponseEntity<Summoner> updateSummoner(@PathVariable String gameName, @PathVariable String tagLine) {
+		Summoner updatedSummoner = service.updateSummonerData(gameName, tagLine);
+
+		return ResponseEntity.status(HttpStatus.OK).body(updatedSummoner);
+	}
+
 }

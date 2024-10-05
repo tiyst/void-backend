@@ -8,7 +8,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import st.tiy.budgetopgg.model.domain.Match;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
+import st.tiy.budgetopgg.repository.MatchRepository;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,22 +24,27 @@ public class MatchService {
 
 	private final String API_KEY;
 	private final RestTemplate restTemplate;
+	private final MatchRepository matchRepository;
 
 	public MatchService(@Value("${api.key}") String apiKey,
-	                    RestTemplate restTemplate) {
+						RestTemplate restTemplate, MatchRepository matchRepository) {
 		this.restTemplate = restTemplate;
 		this.API_KEY = apiKey;
+		this.matchRepository = matchRepository;
 	}
 
-	public List<MatchDto> getMatchesBySummoner(Summoner summoner)
-	{
+	public List<Match> getMatchesBySummoner(Summoner summoner) {
 		return getMatchesByPuuid(summoner.getPuuid());
 	}
 
 	public List<MatchDto> getMatchesByPuuid(String puuid) {
-		List<MatchDto> matchDtos = pullNewMatchesByPuuid(puuid);
+		List<Match> cachedMatches = matchRepository.findAllByPlayersPuuidsContaining(puuid);
 
-		return matchDtos;
+		if (!cachedMatches.isEmpty()) {
+			return cachedMatches;
+		}
+
+		return pullNewMatchesByPuuid(puuid);
 	}
 
 	private List<MatchDto> pullNewMatchesByPuuid(String puuid) {
@@ -57,9 +64,13 @@ public class MatchService {
 			return Collections.emptyList();
 		}
 
-		return Arrays.stream(matchIds)
+		List<MatchDto> updatedMatches = Arrays.stream(matchIds)
 				.map(this::pullMatchByMatchId)
 				.toList();
+
+		matchRepository.saveAll(updatedMatches);
+
+		return updatedMatches;
 	}
 
 	private MatchDto pullMatchByMatchId(String matchId) {
@@ -76,4 +87,7 @@ public class MatchService {
 		return response.getBody();
 	}
 
+	public List<MatchDto> updateMatches(String puuid) {
+		return pullNewMatchesByPuuid(puuid);
+	}
 }
