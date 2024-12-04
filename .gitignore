@@ -1,3 +1,7 @@
+### Our stuff ###
+/src/main/resources/application-*.yaml
+
+### Java stuff ###
 HELP.md
 .gradle
 build/

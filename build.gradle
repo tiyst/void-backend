@@ -47,3 +47,16 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.register("buildWithoutTests") {
+    group = "build"
+    description = "Builds the project without running tests."
+
+    dependsOn "assemble"
+
+    doFirst {
+        tasks.withType(Test).configureEach {
+            it.enabled = false
+        }
+    }
+}
