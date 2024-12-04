@@ -1,14 +1,13 @@
 package st.tiy.budgetopgg.controller;
 
-import com.riotgames.model.MatchDto;
+import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import st.tiy.budgetopgg.model.domain.match.Match;
 import st.tiy.budgetopgg.service.MatchService;
-
-import java.util.List;
 
 @Profile("dev")
 @RestController
@@ -22,7 +21,7 @@ public class MatchController {
 	}
 
 	@GetMapping("/{puuid}")
-	public List<MatchDto> getMatchesByPuuid(@PathVariable("puuid") String puuid) {
+	public List<Match> getMatchesByPuuid(@PathVariable("puuid") String puuid) {
 		return this.matchService.getMatchesByPuuid(puuid);
 	}
 

@@ -1,17 +1,32 @@
-package com.riotgames.model.match;
+package st.tiy.budgetopgg.model.domain.match.team;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
-public class ParticipantDto {
+public class Participant {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
 	private int allInPings;
 	private int assistMePings;
 	private int assists;
 	private int baronKills;
 	private int basicPings;
 	private int bountyLevel;
+	@OneToOne(cascade = CascadeType.ALL)
 	private Challenges challenges;
 	private int champExperience;
 	private int champLevel;
@@ -64,7 +79,8 @@ public class ParticipantDto {
 	private int magicDamageDealt;
 	private int magicDamageDealtToChampions;
 	private int magicDamageTaken;
-	private Missions missions;
+	@ElementCollection
+	private Map<String, Integer> missions;
 	private int needVisionPings;
 	private int neutralMinionsKilled;
 	private int nexusKills;
@@ -75,7 +91,7 @@ public class ParticipantDto {
 	private int onMyWayPings;
 	private int participantId;
 	private int pentaKills;
-	private Perks perks;
+//	private Perks perks; // What are perks?
 	private int physicalDamageDealt;
 	private int physicalDamageDealtToChampions;
 	private int physicalDamageTaken;
@@ -91,7 +107,6 @@ public class ParticipantDto {
 	private int pushPings;
 	private String puuid;
 	private int quadraKills;
-	private int retreatPings;
 	private String riotIdGameName;
 	private String riotIdTagline;
 	private String role;
@@ -139,4 +154,5 @@ public class ParticipantDto {
 	private int wardsKilled;
 	private int wardsPlaced;
 	private boolean win;
+
 }

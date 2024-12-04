@@ -5,12 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@SuppressWarnings("java:S1104")
 public class Objectives {
-	private Baron baron;
-	private Champion champion;
-	private Dragon dragon;
-	private Horde horde;
-	private Inhibitor inhibitor;
-	private RiftHerald riftHerald;
-	private Tower tower;
+	public ObjectiveDto baron;
+	public ObjectiveDto champion;
+	public ObjectiveDto dragon;
+	public ObjectiveDto horde;
+	public ObjectiveDto inhibitor;
+	public ObjectiveDto riftHerald;
+	public ObjectiveDto tower;
 }

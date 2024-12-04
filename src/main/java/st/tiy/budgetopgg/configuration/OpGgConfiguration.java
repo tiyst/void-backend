@@ -1,13 +1,12 @@
 package st.tiy.budgetopgg.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 import st.tiy.budgetopgg.exception.MissingApiKeyException;
 
 import static org.apache.logging.log4j.util.Strings.isBlank;
@@ -32,8 +31,7 @@ public class OpGgConfiguration {
 		interceptors.add(((request, body, execution) -> {
 			request.getHeaders().add("X-Riot-Token", apiKey);
 			return execution.execute(request, body);
-		}));
-		restTemplate.setInterceptors(interceptors);
+		})); restTemplate.setInterceptors(interceptors);
 
 		return restTemplate;
 	}

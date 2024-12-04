@@ -19,9 +19,9 @@ public class Info {
 	private String gameType;
 	private String gameVersion;
 	private int mapId;
-	private ArrayList<ParticipantDto> participantDtos;
+	private ArrayList<ParticipantDto> participants;
 	private String platformId;
 	private int queueId;
-	private ArrayList<TeamDto> teamDtos;
+	private ArrayList<TeamDto> teams;
 	private String tournamentCode;
 }

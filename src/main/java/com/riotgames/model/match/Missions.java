@@ -5,17 +5,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@SuppressWarnings("java:S1104")
 public class Missions {
-	private int playerScore0;
-	private int playerScore1;
-	private int playerScore2;
-	private int playerScore3;
-	private int playerScore4;
-	private int playerScore5;
-	private int playerScore6;
-	private int playerScore7;
-	private int playerScore8;
-	private int playerScore9;
-	private int playerScore10;
-	private int playerScore11;
+	public int playerScore0;
+	public int playerScore1;
+	public int playerScore2;
+	public int playerScore3;
+	public int playerScore4;
+	public int playerScore5;
+	public int playerScore6;
+	public int playerScore7;
+	public int playerScore8;
+	public int playerScore9;
+	public int playerScore10;
+	public int playerScore11;
 }
