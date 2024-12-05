@@ -41,17 +41,11 @@ public class SummonerService {
 		this.restTemplate = restTemplate;
 	}
 
-	public Summoner getSummoner(String gameName, String tagLine) {
-		Optional<Summoner> cachedSummoner = repository.findByGameNameAndTagLine(gameName, tagLine);
-
-		if (cachedSummoner.isEmpty()) {
-			return pullSummonerData(gameName, tagLine);
-		}
-
-		return cachedSummoner.orElse(null);
+	public Optional<Summoner> getSummoner(String gameName, String tagLine) {
+		return repository.findByGameNameAndTagLine(gameName, tagLine);
 	}
 
-	private Summoner pullSummonerData(String gameName, String tagLine) {
+	public Summoner updateSummoner(String gameName, String tagLine) {
 		String query = ACCOUNT_BASE_URL.formatted(gameName, tagLine);
 		AccountDto response = restTemplate.getForObject(query, AccountDto.class);
 
