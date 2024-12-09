@@ -1,6 +1,6 @@
 spring:
   application:
-    name: budgetOpGg
+    name: Void
   jpa:
     properties:
       hibernate:
