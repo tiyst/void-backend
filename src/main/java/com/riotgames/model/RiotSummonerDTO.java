@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SummonerDTO {
+public class RiotSummonerDTO {
 
 	private String id;
 	private String accountId;

@@ -1,6 +1,6 @@
 package st.tiy.budgetopgg.service;
 
-import com.riotgames.model.LeagueEntryDTO;
+import com.riotgames.model.RiotLeagueEntryDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
@@ -31,7 +31,7 @@ public class RankService {
 
 	public List<Rank> getRanksBySummonerId(String summonerId) {
 		String url = String.format(RANK_BASE_URL, summonerId);
-		LeagueEntryDTO[] response = restTemplate.getForObject(url, LeagueEntryDTO[].class);
+		RiotLeagueEntryDTO[] response = restTemplate.getForObject(url, RiotLeagueEntryDTO[].class);
 
 		if (response == null) {
 			return Collections.emptyList();

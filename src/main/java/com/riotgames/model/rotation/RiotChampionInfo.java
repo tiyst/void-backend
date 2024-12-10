@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ChampionInfo {
+public class RiotChampionInfo {
 
 	private int maxNewPlayerLevel;
 	private List<Integer> freeChampionIdsForNewPlayers;

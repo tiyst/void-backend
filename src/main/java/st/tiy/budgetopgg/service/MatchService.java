@@ -1,6 +1,6 @@
 package st.tiy.budgetopgg.service;
 
-import com.riotgames.model.MatchDto;
+import com.riotgames.model.RiotMatchDto;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +56,7 @@ public class MatchService {
 
 	private Match pullMatchByMatchId(String matchId) {
 		String url = String.format(FETCH_MATCH_URL, matchId);
-		MatchDto match = this.restTemplate.getForObject(url, MatchDto.class);
+		RiotMatchDto match = this.restTemplate.getForObject(url, RiotMatchDto.class);
 
 		return mapper.mapToMatch(match);
 	}

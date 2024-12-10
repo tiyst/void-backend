@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Horde {
-	private boolean first;
-	private int kills;
+public class RiotBanDto {
+	private int championId;
+	private int pickTurn;
 }

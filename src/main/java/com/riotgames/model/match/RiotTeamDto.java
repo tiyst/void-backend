@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-public class TeamDto {
-	private ArrayList<BanDto> bans;
-	private Objectives objectives;
+public class RiotTeamDto {
+	private ArrayList<RiotBanDto> bans;
+	private RiotObjectives objectives;
 	private int teamId;
 	private boolean win;
 }

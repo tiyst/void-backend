@@ -1,13 +1,15 @@
 package st.tiy.budgetopgg.model.mapper;
 
-import com.riotgames.model.MatchDto;
-import com.riotgames.model.match.BanDto;
-import com.riotgames.model.match.Info;
-import com.riotgames.model.match.Metadata;
-import com.riotgames.model.match.ObjectiveDto;
-import com.riotgames.model.match.Objectives;
-import com.riotgames.model.match.ParticipantDto;
-import com.riotgames.model.match.TeamDto;
+import com.riotgames.model.RiotMatchDto;
+import com.riotgames.model.match.RiotBanDto;
+import com.riotgames.model.match.RiotChallenges;
+import com.riotgames.model.match.RiotInfo;
+import com.riotgames.model.match.RiotMetadata;
+import com.riotgames.model.match.RiotObjectiveDto;
+import com.riotgames.model.match.RiotObjectives;
+import com.riotgames.model.match.RiotParticipantDto;
+import com.riotgames.model.match.RiotTeamDto;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,33 +31,33 @@ public interface MatchDtoMatchMapper {
 	// TODO Missions
 
 	@Mapping(target = "id", ignore = true)
-	default Match mapToMatch(MatchDto matchDto) {
+	default Match mapToMatch(RiotMatchDto riotMatchDto) {
 		Match match = new Match();
 
-		mapMetadataToMatch(match, matchDto.getMetadata());
-		mapInfoToMatch(match, matchDto.getInfo());
+		mapMetadataToMatch(match, riotMatchDto.getMetadata());
+		mapInfoToMatch(match, riotMatchDto.getInfo());
 
 		return match;
 	}
 
 	@Mapping(source = "participants", target = "participantIds")
-	void mapMetadataToMatch(@MappingTarget Match match, Metadata metadata);
+	void mapMetadataToMatch(@MappingTarget Match match, RiotMetadata metadata);
 
 	@Mapping(source = "participants", target = "participantList")
-	void mapInfoToMatch(@MappingTarget Match match, Info info);
+	void mapInfoToMatch(@MappingTarget Match match, RiotInfo info);
 
 	@Mapping(source = ".", target = ".")
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "challenges", target = "challenges")
-	Participant mapToParticipant(ParticipantDto participantDto);
+	Participant mapToParticipant(RiotParticipantDto participantDto);
 
-	Objective mapToObjective(ObjectiveDto objectiveDto);
+	Objective mapToObjective(RiotObjectiveDto objectiveDto);
 
 	@Mapping(source = "_12AssistStreakCount", target = "assistStreakCount12")
-	Challenges mapToChallenges(com.riotgames.model.match.Challenges challengesDto);
+	Challenges mapToChallenges(RiotChallenges challengesDto);
 
 	//TODO generify mapping to maps with T
-	default Map<String, Objective> mapObjectives(Objectives objectives) {
+	default Map<String, Objective> mapObjectives(RiotObjectives objectives) {
 		Map<String, Objective> result = new HashMap<>();
 		try {
 			Field[] fields = objectives.getClass().getDeclaredFields();
@@ -63,7 +65,7 @@ public interface MatchDtoMatchMapper {
 				String fieldName = field.getName();
 				Object fieldValue = field.get(objectives);
 
-				if (fieldValue instanceof ObjectiveDto value) {
+				if (fieldValue instanceof RiotObjectiveDto value) {
 					result.put(fieldName, mapToObjective(value));
 				}
 			}
@@ -73,20 +75,20 @@ public interface MatchDtoMatchMapper {
 		return result;
 	}
 
-	default Team mapToTeam(TeamDto teamDto) {
+	default Team mapToTeam(RiotTeamDto riotTeamDto) {
 		Team team = new Team();
-		team.setObjectives(mapObjectives(teamDto.getObjectives()));
-		team.setChampionBans(mapBans(teamDto.getBans()));
-		team.setWin(teamDto.isWin());
-		team.setTeamId(teamDto.getTeamId());
+		team.setObjectives(mapObjectives(riotTeamDto.getObjectives()));
+		team.setChampionBans(mapBans(riotTeamDto.getBans()));
+		team.setWin(riotTeamDto.isWin());
+		team.setTeamId(riotTeamDto.getTeamId());
 
 		return team;
 	}
 
-	default List<Integer> mapBans(ArrayList<BanDto> bans) {
+	default List<Integer> mapBans(ArrayList<RiotBanDto> bans) {
 		return bans.stream()
-			.sorted(Comparator.comparingInt(BanDto::getPickTurn))
-			.map(BanDto::getChampionId)
+			.sorted(Comparator.comparingInt(RiotBanDto::getPickTurn))
+			.map(RiotBanDto::getChampionId)
 			.toList();
 	}
 

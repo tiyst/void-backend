@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-public class Metadata {
-	private String dataVersion;
-	private String matchId;
-	private ArrayList<String> participants;
+public class RiotPerks {
+	private RiotStatPerks statPerks;
+	private ArrayList<RiotStyle> styles;
 }

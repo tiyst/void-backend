@@ -1,6 +1,6 @@
 package st.tiy.budgetopgg.model.mapper;
 
-import com.riotgames.model.MatchDto;
+import com.riotgames.model.RiotMatchDto;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,20 +10,20 @@ import st.tiy.budgetopgg.utils.FileLoaderUtil;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class MatchDtoMatchMapperTest {
+class MatchDtoRiotMatchMapperTest {
 
 	private static MatchDtoMatchMapper mapper;
-	private static MatchDto matchDto;
+	private static RiotMatchDto riotMatchDto;
 
 	@BeforeAll
 	static void setUp() throws IOException {
-		matchDto = FileLoaderUtil.loadFile("example/exampleMatch.json", MatchDto.class);
+		riotMatchDto = FileLoaderUtil.loadFile("example/exampleMatch.json", RiotMatchDto.class);
 		mapper = new MatchDtoMatchMapperImpl();
 	}
 
 	@Test
 	void matchMapsCorrectly() {
-		Match match = mapper.mapToMatch(matchDto);
+		Match match = mapper.mapToMatch(riotMatchDto);
 
 		assertThat(match).isNotNull();
 	}

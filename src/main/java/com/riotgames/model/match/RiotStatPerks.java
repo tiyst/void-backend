@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Inhibitor {
-	private boolean first;
-	private int kills;
+public class RiotStatPerks {
+	private int defense;
+	private int flex;
+	private int offense;
 }

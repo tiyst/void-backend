@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AccountDto {
+public class RiotAccountDto {
 	private String puuid;
 	private String gameName;
 	private String tagLine;

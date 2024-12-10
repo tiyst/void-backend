@@ -1,6 +1,6 @@
 package st.tiy.budgetopgg.model.mapper;
 
-import com.riotgames.model.rotation.ChampionInfo;
+import com.riotgames.model.rotation.RiotChampionInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import st.tiy.budgetopgg.model.domain.rotation.Rotation;
@@ -10,6 +10,6 @@ public interface RotationMapper {
 
 	@Mapping(source = "freeChampionIdsForNewPlayers", target = "rotationForNewPlayers")
 	@Mapping(source = "freeChampionIds", target = "rotation")
-	Rotation mapToRotation(ChampionInfo championInfo);
+	Rotation mapToRotation(RiotChampionInfo riotChampionInfo);
 
 }

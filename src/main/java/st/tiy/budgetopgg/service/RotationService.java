@@ -1,6 +1,6 @@
 package st.tiy.budgetopgg.service;
 
-import com.riotgames.model.rotation.ChampionInfo;
+import com.riotgames.model.rotation.RiotChampionInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.model.domain.rotation.Rotation;
@@ -22,7 +22,7 @@ public class RotationService {
 	}
 
 	public Rotation getCurrentWeekRotation() {
-		ChampionInfo response = restTemplate.getForObject(ROTATION_BASE_URL, ChampionInfo.class);
+		RiotChampionInfo response = restTemplate.getForObject(ROTATION_BASE_URL, RiotChampionInfo.class);
 
 		return rotationMapper.mapToRotation(response);
 	}

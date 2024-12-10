@@ -1,12 +1,12 @@
 package com.riotgames.model;
 
-import com.riotgames.model.league.MiniSeriesDTO;
+import com.riotgames.model.league.RiotMiniSeriesDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class LeagueEntryDTO {
+public class RiotLeagueEntryDTO {
 	private String leagueId;
 	private String queueType;
 	private String tier;
@@ -19,5 +19,5 @@ public class LeagueEntryDTO {
 	private boolean inactive;
 	private boolean freshBlood;
 	private boolean hotStreak;
-	private MiniSeriesDTO miniSeries;
+	private RiotMiniSeriesDTO miniSeries;
 }

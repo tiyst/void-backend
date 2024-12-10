@@ -1,7 +1,7 @@
 package st.tiy.budgetopgg.service;
 
-import com.riotgames.model.AccountDto;
-import com.riotgames.model.SummonerDTO;
+import com.riotgames.model.RiotAccountDto;
+import com.riotgames.model.RiotSummonerDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
@@ -47,12 +47,12 @@ public class SummonerService {
 
 	public Summoner updateSummoner(String gameName, String tagLine) {
 		String query = ACCOUNT_BASE_URL.formatted(gameName, tagLine);
-		AccountDto response = restTemplate.getForObject(query, AccountDto.class);
+		RiotAccountDto response = restTemplate.getForObject(query, RiotAccountDto.class);
 
 		Summoner summoner = accountDtoMapper.mapAccountDtoToSummoner(response);
 
 		query = SUMMONER_BASE_URL.formatted(summoner.getPuuid());
-		SummonerDTO summonerResponse = restTemplate.getForObject(query, SummonerDTO.class);
+		RiotSummonerDTO summonerResponse = restTemplate.getForObject(query, RiotSummonerDTO.class);
 		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
 
 		this.matchService.getMatchesBySummoner(summoner);

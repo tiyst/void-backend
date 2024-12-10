@@ -1,6 +1,6 @@
 package st.tiy.budgetopgg.service;
 
-import com.riotgames.model.MatchDto;
+import com.riotgames.model.RiotMatchDto;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class MatchServiceTest {
 
 	private static MatchService matchService;
 	private static RestTemplate restTemplate;
-	private static MatchDto exampleMatch;
+	private static RiotMatchDto exampleMatch;
 	private static MatchRepository matchRepository;
 	private static MatchDtoMatchMapper mapper;
 
@@ -27,7 +27,7 @@ class MatchServiceTest {
 		mapper = mock(MatchDtoMatchMapper.class);
 		matchRepository = mock(MatchRepository.class);
 		matchService = new MatchService(restTemplate, matchRepository, mapper);
-		exampleMatch = FileLoaderUtil.loadFile("example/exampleMatch.json", MatchDto.class);
+		exampleMatch = FileLoaderUtil.loadFile("example/exampleMatch.json", RiotMatchDto.class);
 	}
 
 	@Test

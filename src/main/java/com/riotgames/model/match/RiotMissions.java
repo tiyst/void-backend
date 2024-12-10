@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @SuppressWarnings("java:S1104")
-public class Missions {
+public class RiotMissions {
 	public int playerScore0;
 	public int playerScore1;
 	public int playerScore2;

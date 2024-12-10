@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Selection {
+public class RiotSelection {
 	private int perk;
 	private int var1;
 	private int var2;

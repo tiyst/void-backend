@@ -1,6 +1,6 @@
 package st.tiy.budgetopgg.model.mapper;
 
-import com.riotgames.model.SummonerDTO;
+import com.riotgames.model.RiotSummonerDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -13,6 +13,6 @@ public interface SummonerDtoSummonerMapper {
 	@Mapping(source = "summonerLevel", target = "level")
 	@Mapping(source = "id", target = "summonerId")
 	@Mapping(target = "puuid", ignore = true)
-	Summoner mapSummonerDtoToSummoner(SummonerDTO source, @MappingTarget Summoner summoner);
+	Summoner mapSummonerDtoToSummoner(RiotSummonerDTO source, @MappingTarget Summoner summoner);
 
 }

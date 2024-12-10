@@ -5,14 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ParticipantDto {
+public class RiotParticipantDto {
 	private int allInPings;
 	private int assistMePings;
 	private int assists;
 	private int baronKills;
 	private int basicPings;
 	private int bountyLevel;
-	private Challenges challenges;
+	private RiotChallenges challenges;
 	private int champExperience;
 	private int champLevel;
 	private int championId;
@@ -64,7 +64,7 @@ public class ParticipantDto {
 	private int magicDamageDealt;
 	private int magicDamageDealtToChampions;
 	private int magicDamageTaken;
-	private Missions missions;
+	private RiotMissions missions;
 	private int needVisionPings;
 	private int neutralMinionsKilled;
 	private int nexusKills;
@@ -75,7 +75,7 @@ public class ParticipantDto {
 	private int onMyWayPings;
 	private int participantId;
 	private int pentaKills;
-	private Perks perks;
+	private RiotPerks perks;
 	private int physicalDamageDealt;
 	private int physicalDamageDealtToChampions;
 	private int physicalDamageTaken;

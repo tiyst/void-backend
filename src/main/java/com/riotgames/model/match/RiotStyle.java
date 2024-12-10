@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-public class Style {
+public class RiotStyle {
 	private String description;
-	private ArrayList<Selection> selections;
+	private ArrayList<RiotSelection> selections;
 	private int style;
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-public class Info {
+public class RiotInfo {
 	private String endOfGameResult;
 	private long gameCreation;
 	private int gameDuration;
@@ -19,9 +19,9 @@ public class Info {
 	private String gameType;
 	private String gameVersion;
 	private int mapId;
-	private ArrayList<ParticipantDto> participants;
+	private ArrayList<RiotParticipantDto> participants;
 	private String platformId;
 	private int queueId;
-	private ArrayList<TeamDto> teams;
+	private ArrayList<RiotTeamDto> teams;
 	private String tournamentCode;
 }

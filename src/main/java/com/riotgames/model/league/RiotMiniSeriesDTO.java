@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MiniSeriesDTO {
+public class RiotMiniSeriesDTO {
 
 	private int losses;
 	private String progress;
