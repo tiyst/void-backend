@@ -4,9 +4,11 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import st.tiy.budgetopgg.model.domain.mastery.ChampionMastery;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,5 +30,8 @@ public class Summoner {
 
 	@OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Rank> rank;
+
+	@OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ChampionMastery> masteries;
 
 }

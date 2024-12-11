@@ -1,9 +1,7 @@
 package st.tiy.budgetopgg.service;
 
 import com.riotgames.model.RiotMatchDto;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.model.domain.match.Match;
@@ -11,6 +9,12 @@ import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.MatchDtoMatchMapper;
 import st.tiy.budgetopgg.repository.MatchRepository;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
 @Service
 public class MatchService {
 
@@ -46,19 +50,26 @@ public class MatchService {
 		}
 
 		List<Match> matches = Arrays.stream(matchIds)
-			.map(this::pullMatchByMatchId)
-			.toList();
+		                            .map(this::pullMatchByMatchId)
+		                            .filter(Optional::isPresent)
+		                            .map(Optional::get)
+		                            .toList();
 
 		matchRepository.saveAll(matches);
 
 		return matches;
 	}
 
-	private Match pullMatchByMatchId(String matchId) {
+	private Optional<Match> pullMatchByMatchId(String matchId) {
 		String url = String.format(FETCH_MATCH_URL, matchId);
 		RiotMatchDto match = this.restTemplate.getForObject(url, RiotMatchDto.class);
 
-		return mapper.mapToMatch(match);
+		if (match == null) {
+			log.error("Retrieving match failed for {}", matchId);
+			return Optional.empty();
+		}
+
+		return Optional.of(mapper.mapToMatch(match));
 	}
 
 }

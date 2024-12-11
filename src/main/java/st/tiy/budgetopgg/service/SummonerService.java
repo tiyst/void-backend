@@ -4,6 +4,7 @@ import com.riotgames.model.RiotAccountDto;
 import com.riotgames.model.RiotSummonerDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import st.tiy.budgetopgg.model.domain.mastery.ChampionMastery;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.AccountDtoSummonerMapper;
@@ -21,20 +22,19 @@ public class SummonerService {
 
 	private final MatchService matchService;
 	private final RankService rankService;
+	private final ChampionMasteryService masteryService;
 	private final SummonerRepository repository;
 	private final AccountDtoSummonerMapper accountDtoMapper;
 	private final SummonerDtoSummonerMapper summonerDtoMapper;
 
 	private final RestTemplate restTemplate;
 
-	public SummonerService(MatchService matchService,
-	                       RankService rankService,
-	                       SummonerRepository repository,
-	                       AccountDtoSummonerMapper accountDtoMapper,
-	                       SummonerDtoSummonerMapper summonerDtoMapper,
-	                       RestTemplate restTemplate) {
+	public SummonerService(MatchService matchService, RankService rankService, ChampionMasteryService masteryService,
+	                       SummonerRepository repository, AccountDtoSummonerMapper accountDtoMapper,
+	                       SummonerDtoSummonerMapper summonerDtoMapper, RestTemplate restTemplate) {
 		this.matchService = matchService;
 		this.rankService = rankService;
+		this.masteryService = masteryService;
 		this.repository = repository;
 		this.accountDtoMapper = accountDtoMapper;
 		this.summonerDtoMapper = summonerDtoMapper;
@@ -56,6 +56,9 @@ public class SummonerService {
 		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
 
 		this.matchService.getMatchesBySummoner(summoner);
+
+		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(summoner.getPuuid());
+		summoner.setMasteries(masteries);
 
 		List<Rank> rank = this.rankService.getRanksBySummonerId(summoner.getSummonerId());
 		summoner.setRank(rank);

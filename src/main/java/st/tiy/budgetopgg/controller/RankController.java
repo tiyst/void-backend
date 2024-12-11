@@ -1,16 +1,16 @@
 package st.tiy.budgetopgg.controller;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
 import st.tiy.budgetopgg.service.RankService;
+import st.tiy.budgetopgg.utils.Dev;
 
 import java.util.List;
 
-@Profile("dev")
+@Dev
 @RestController
 @RequestMapping("/api/rank")
 public class RankController {
@@ -21,8 +21,8 @@ public class RankController {
 		this.rankService = rankService;
 	}
 
-	@GetMapping
-	public List<Rank> getRanksBySummonerId(@RequestParam(name = "summonerId") String summonerId) {
+	@GetMapping(path = "/{summonerId}")
+	public List<Rank> getRanksBySummonerId(@PathVariable(name = "summonerId") String summonerId) {
 		return this.rankService.getRanksBySummonerId(summonerId);
 	}
 
