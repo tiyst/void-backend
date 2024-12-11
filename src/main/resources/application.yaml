@@ -9,3 +9,12 @@ spring:
   jackson:
     mapper:
       ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+
+logging:
+  level:
+    org:
+      hibernate: ERROR
+      springframework:
+        web: ERROR
+    st:
+      tiy: ERROR

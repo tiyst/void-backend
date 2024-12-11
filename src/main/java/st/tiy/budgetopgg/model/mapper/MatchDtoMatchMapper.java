@@ -9,13 +9,6 @@ import com.riotgames.model.match.RiotObjectiveDto;
 import com.riotgames.model.match.RiotObjectives;
 import com.riotgames.model.match.RiotParticipantDto;
 import com.riotgames.model.match.RiotTeamDto;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -24,6 +17,13 @@ import st.tiy.budgetopgg.model.domain.match.team.Challenges;
 import st.tiy.budgetopgg.model.domain.match.team.Objective;
 import st.tiy.budgetopgg.model.domain.match.team.Participant;
 import st.tiy.budgetopgg.model.domain.match.team.Team;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Mapper(componentModel = "spring")
 public interface MatchDtoMatchMapper {
@@ -53,7 +53,6 @@ public interface MatchDtoMatchMapper {
 
 	Objective mapToObjective(RiotObjectiveDto objectiveDto);
 
-	@Mapping(source = "_12AssistStreakCount", target = "assistStreakCount12")
 	Challenges mapToChallenges(RiotChallenges challengesDto);
 
 	//TODO generify mapping to maps with T

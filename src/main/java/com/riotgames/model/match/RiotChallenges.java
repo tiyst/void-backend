@@ -18,7 +18,7 @@ import java.util.Map;
 public class RiotChallenges {
 
 	@JsonProperty("12AssistStreakCount")
-	public Integer _12AssistStreakCount;
+	public Integer assistStreakCount12;
 	@JsonProperty("HealFromMapSources")
 	public Integer healFromMapSources;
 	@JsonProperty("InfernalScalePickup")

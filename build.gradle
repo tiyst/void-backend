@@ -7,7 +7,7 @@ plugins {
 group = 'st.tiy'
 version = '0.0.1-SNAPSHOT'
 
-archivesBaseName = 'Void' // Change this
+archivesBaseName = 'Void'
 
 java {
     toolchain {
