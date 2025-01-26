@@ -27,7 +27,7 @@ class MatchServiceTest {
 		mapper = mock(MatchDtoMatchMapper.class);
 		matchRepository = mock(MatchRepository.class);
 		matchService = new MatchService(restTemplate, matchRepository, mapper);
-		exampleMatch = FileLoaderUtil.loadFile("example/exampleMatch.json", RiotMatchDto.class);
+		exampleMatch = FileLoaderUtil.loadFile("example/exampleAramMatch.json", RiotMatchDto.class);
 	}
 
 	@Test

@@ -7,9 +7,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import st.tiy.budgetopgg.model.domain.match.team.runes.Perks;
+
+import java.util.Map;
 
 @Entity
 @Getter
@@ -91,7 +93,8 @@ public class Participant {
 	private int onMyWayPings;
 	private int participantId;
 	private int pentaKills;
-//	private Perks perks; // What are perks?
+	@OneToOne(cascade = CascadeType.ALL)
+	private Perks perks;
 	private int physicalDamageDealt;
 	private int physicalDamageDealtToChampions;
 	private int physicalDamageTaken;

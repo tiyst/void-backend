@@ -17,7 +17,7 @@ class MatchDtoRiotMatchMapperTest {
 
 	@BeforeAll
 	static void setUp() throws IOException {
-		riotMatchDto = FileLoaderUtil.loadFile("example/exampleMatch.json", RiotMatchDto.class);
+		riotMatchDto = FileLoaderUtil.loadFile("example/exampleAramMatch.json", RiotMatchDto.class);
 		mapper = new MatchDtoMatchMapperImpl();
 	}
 

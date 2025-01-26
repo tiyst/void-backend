@@ -1,5 +1,6 @@
 package st.tiy.budgetopgg.model.domain.mastery;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +24,7 @@ public class ChampionMastery {
 	@GeneratedValue
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "summoner_puuid")
 	private Summoner summoner;
 
@@ -38,6 +39,6 @@ public class ChampionMastery {
 	private Integer championSeasonMilestone;
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> milestoneGrades;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	private MasteryMilestone masteryMilestone;
 }
