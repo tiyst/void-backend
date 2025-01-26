@@ -8,6 +8,7 @@ import com.riotgames.model.match.RiotMetadata;
 import com.riotgames.model.match.RiotObjectiveDto;
 import com.riotgames.model.match.RiotObjectives;
 import com.riotgames.model.match.RiotParticipantDto;
+import com.riotgames.model.match.RiotPerks;
 import com.riotgames.model.match.RiotTeamDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,6 +18,7 @@ import st.tiy.budgetopgg.model.domain.match.team.Challenges;
 import st.tiy.budgetopgg.model.domain.match.team.Objective;
 import st.tiy.budgetopgg.model.domain.match.team.Participant;
 import st.tiy.budgetopgg.model.domain.match.team.Team;
+import st.tiy.budgetopgg.model.domain.match.team.runes.Perks;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -54,6 +56,11 @@ public interface MatchDtoMatchMapper {
 	Objective mapToObjective(RiotObjectiveDto objectiveDto);
 
 	Challenges mapToChallenges(RiotChallenges challengesDto);
+
+	@Mapping(source = "statPerks.defense", target = "defense")
+	@Mapping(source = "statPerks.offense", target = "offense")
+	@Mapping(source = "statPerks.flex", target = "flex")
+	Perks mapToPerks(RiotPerks perksDto);
 
 	//TODO generify mapping to maps with T
 	default Map<String, Objective> mapObjectives(RiotObjectives objectives) {
