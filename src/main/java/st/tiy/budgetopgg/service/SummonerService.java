@@ -3,7 +3,6 @@ package st.tiy.budgetopgg.service;
 import com.riotgames.model.RiotAccountDto;
 import com.riotgames.model.RiotSummonerDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import st.tiy.budgetopgg.api.RiotApiClient;
 import st.tiy.budgetopgg.api.Server;
 import st.tiy.budgetopgg.model.domain.mastery.ChampionMastery;
@@ -27,22 +26,19 @@ public class SummonerService {
 	private final SummonerDtoSummonerMapper summonerDtoMapper;
 	private final RiotApiClient apiClient;
 
-	private final RestTemplate restTemplate;
-
-	public SummonerService(MatchService matchService, RankService rankService,
+	public SummonerService(MatchService matchService,
+	                       RankService rankService,
 	                       ChampionMasteryService masteryService,
 	                       SummonerRepository repository,
 	                       AccountDtoSummonerMapper accountDtoMapper,
 	                       SummonerDtoSummonerMapper summonerDtoMapper,
-	                       RiotApiClient apiClient,
-	                       RestTemplate restTemplate) {
+	                       RiotApiClient apiClient) {
 		this.matchService = matchService;
 		this.rankService = rankService;
 		this.masteryService = masteryService;
 		this.repository = repository;
 		this.accountDtoMapper = accountDtoMapper;
 		this.summonerDtoMapper = summonerDtoMapper;
-		this.restTemplate = restTemplate;
 		this.apiClient = apiClient;
 	}
 
@@ -51,10 +47,10 @@ public class SummonerService {
 	}
 
 	public Summoner updateSummoner(Server server, String gameName, String tagLine) {
-		RiotAccountDto response = restTemplate.getForObject(apiClient.formatGetAccountUrl(server, gameName, tagLine), RiotAccountDto.class);
+		RiotAccountDto response = apiClient.getAccount(server, gameName, tagLine);
 		Summoner summoner = accountDtoMapper.mapAccountDtoToSummoner(response);
 
-		RiotSummonerDTO summonerResponse = restTemplate.getForObject(apiClient.formatGetSummonertUrl(server, summoner.getPuuid()), RiotSummonerDTO.class);
+		RiotSummonerDTO summonerResponse = apiClient.getSummoner(server, summoner.getPuuid());
 		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
 
 		this.matchService.getMatchesBySummoner(apiClient.serverToRegion(server), summoner);
