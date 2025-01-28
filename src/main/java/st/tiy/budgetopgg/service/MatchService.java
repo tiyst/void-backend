@@ -4,6 +4,8 @@ import com.riotgames.model.RiotMatchDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import st.tiy.budgetopgg.api.Region;
+import st.tiy.budgetopgg.api.RiotApiClient;
 import st.tiy.budgetopgg.model.domain.match.Match;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.MatchDtoMatchMapper;
@@ -18,39 +20,38 @@ import java.util.Optional;
 @Service
 public class MatchService {
 
-	private static final String FETCH_MATCH_IDS_URL = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/%s/ids";
-	private static final String FETCH_MATCH_URL = "https://europe.api.riotgames.com/lol/match/v5/matches/%s";
-
 	private final RestTemplate restTemplate;
 	private final MatchRepository matchRepository;
 	private final MatchDtoMatchMapper mapper;
+	private final RiotApiClient apiClient;
 
-	public MatchService(RestTemplate restTemplate, MatchRepository matchRepository, MatchDtoMatchMapper mapper) {
+	public MatchService(RestTemplate restTemplate,
+	                    MatchRepository matchRepository,
+	                    MatchDtoMatchMapper mapper,
+	                    RiotApiClient apiClient) {
 		this.restTemplate = restTemplate;
 		this.matchRepository = matchRepository;
 		this.mapper = mapper;
+		this.apiClient = apiClient;
 	}
 
-	public List<Match> getMatchesBySummoner(Summoner summoner) {
-		return getMatchesByPuuid(summoner.getPuuid());
+	public List<Match> getMatchesBySummoner(Region region, Summoner summoner) {
+		return getMatchesByPuuid(region, summoner.getPuuid());
 	}
 
-	public List<Match> getMatchesByPuuid(String puuid) {
-		List<Match> matchDtos = pullNewMatchesByPuuid(puuid);
-
-		return matchDtos;
+	public List<Match> getMatchesByPuuid(Region region, String puuid) {
+		return pullNewMatchesByPuuid(region, puuid);
 	}
 
-	private List<Match> pullNewMatchesByPuuid(String puuid) {
-		String url = String.format(FETCH_MATCH_IDS_URL, puuid);
-		String[] matchIds = this.restTemplate.getForObject(url, String[].class);
+	private List<Match> pullNewMatchesByPuuid(Region region, String puuid) {
+		String[] matchIds = this.restTemplate.getForObject(apiClient.formatGetMatchIdsUrl(region, puuid), String[].class);
 
 		if (matchIds == null || matchIds.length == 0) {
 			return Collections.emptyList();
 		}
 
 		List<Match> matches = Arrays.stream(matchIds)
-		                            .map(this::pullMatchByMatchId)
+		                            .map(id -> pullMatchByMatchId(region, id))
 		                            .filter(Optional::isPresent)
 		                            .map(Optional::get)
 		                            .toList();
@@ -60,9 +61,8 @@ public class MatchService {
 		return matches;
 	}
 
-	private Optional<Match> pullMatchByMatchId(String matchId) {
-		String url = String.format(FETCH_MATCH_URL, matchId);
-		RiotMatchDto match = this.restTemplate.getForObject(url, RiotMatchDto.class);
+	private Optional<Match> pullMatchByMatchId(Region region, String matchId) {
+		RiotMatchDto match = this.restTemplate.getForObject(apiClient.formatGetMatchUrl(region, matchId), RiotMatchDto.class);
 
 		if (match == null) {
 			log.error("Retrieving match failed for {}", matchId);

@@ -1,4 +1,4 @@
-# League profile checker - name pending kek
+# _Void_ - League profile checker
 
 ### Dev
 - run with **_dev_** profile to expose local development endpoints

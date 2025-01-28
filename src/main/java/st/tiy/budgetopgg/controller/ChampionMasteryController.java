@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import st.tiy.budgetopgg.api.Server;
 import st.tiy.budgetopgg.model.domain.mastery.ChampionMastery;
 import st.tiy.budgetopgg.service.ChampionMasteryService;
 import st.tiy.budgetopgg.utils.Dev;
@@ -21,14 +22,16 @@ public class ChampionMasteryController {
 		this.championMasteryService = championMasteryService;
 	}
 
-	@GetMapping("/{puuid}")
-	public List<ChampionMastery> getMasteryForPuuid(@PathVariable("puuid") String puuid) {
-		return championMasteryService.getMasteryByPuuid(puuid);
+	@GetMapping("/{server}/{puuid}")
+	public List<ChampionMastery> getMasteryForPuuid(@PathVariable("server") Server server,
+	                                                @PathVariable("puuid") String puuid) {
+		return championMasteryService.getMasteryByPuuid(server, puuid);
 	}
 
-	@GetMapping("/{puuid}/champion/{championId}")
-	public List<ChampionMastery> getMasteryForPuuidAndChampionId(@PathVariable("puuid") String puuid,
+	@GetMapping("/{server}/{puuid}/champion/{championId}")
+	public ChampionMastery getMasteryForPuuidAndChampionId(@PathVariable("server") Server server,
+	                                                             @PathVariable("puuid") String puuid,
 	                                                             @PathVariable("championId") String championId) {
-		return championMasteryService.getMasteryByPuuidAndChampionId(puuid, championId);
+		return championMasteryService.getMasteryByPuuidAndChampionId(server, puuid, championId);
 	}
 }

@@ -3,6 +3,8 @@ package st.tiy.budgetopgg.service;
 import com.riotgames.model.mastery.RiotChampionMastery;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import st.tiy.budgetopgg.api.RiotApiClient;
+import st.tiy.budgetopgg.api.Server;
 import st.tiy.budgetopgg.model.domain.mastery.ChampionMastery;
 import st.tiy.budgetopgg.model.mapper.ChampionMasteryMapper;
 
@@ -13,29 +15,32 @@ import java.util.List;
 @Service
 public class ChampionMasteryService {
 
-	private static final String FETCH_MASTERY_IDS_URL = "https://eun1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/%s";
-	private static final String FETCH_MASTERY_BY_CHAMP_URL_SUFFIX = "/by-champion/%s"; //suffix is champion ID
-
 	private final RestTemplate restTemplate;
 	private final ChampionMasteryMapper championMasteryMapper;
+	private final RiotApiClient apiClient;
 
 	public ChampionMasteryService(RestTemplate restTemplate,
-	                              ChampionMasteryMapper championMasteryMapper) {
+	                              ChampionMasteryMapper championMasteryMapper,
+	                              RiotApiClient apiClient) {
 		this.restTemplate = restTemplate;
 		this.championMasteryMapper = championMasteryMapper;
+		this.apiClient = apiClient;
 	}
 
-	public List<ChampionMastery> getMasteryByPuuidAndChampionId(String puuid, String championId) {
-		String url = (FETCH_MASTERY_IDS_URL + FETCH_MASTERY_BY_CHAMP_URL_SUFFIX).formatted(puuid, championId);
-
-		return pullChampionMasteries(url);
+	public ChampionMastery getMasteryByPuuidAndChampionId(Server server, String puuid, String championId) {
+		return pullChampionMastery(
+				apiClient.formatGetChampionMasteryByChampionIdUrl(server, puuid, championId));
 
 	}
 
-	public List<ChampionMastery> getMasteryByPuuid(String puuid) {
-		String url = FETCH_MASTERY_IDS_URL.formatted(puuid);
+	public List<ChampionMastery> getMasteryByPuuid(Server server, String puuid) {
+		return pullChampionMasteries(apiClient.formatGetChampionMasteryUrl(server, puuid));
+	}
 
-		return pullChampionMasteries(url);
+	private ChampionMastery pullChampionMastery(String url) {
+		RiotChampionMastery mastery = restTemplate.getForObject(url, RiotChampionMastery.class);
+
+		return championMasteryMapper.mapToChampionMastery(mastery);
 	}
 
 	private List<ChampionMastery> pullChampionMasteries(String url) {

@@ -9,7 +9,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,5 +25,5 @@ public class Perks {
 	private int offense;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private ArrayList<PerksStyle> styles;
+	private List<PerksStyle> styles;
 }
