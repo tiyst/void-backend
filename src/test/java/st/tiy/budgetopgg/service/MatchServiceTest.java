@@ -4,7 +4,7 @@ import com.riotgames.model.RiotMatchDto;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import st.tiy.budgetopgg.api.RiotApiClient;
-import st.tiy.budgetopgg.model.mapper.MatchDtoMatchMapper;
+import st.tiy.budgetopgg.model.mapper.RiotMatchDtoMatchMapper;
 import st.tiy.budgetopgg.repository.MatchRepository;
 import st.tiy.budgetopgg.utils.FileLoaderUtil;
 
@@ -18,13 +18,13 @@ class MatchServiceTest {
 	private static MatchService matchService;
 	private static RiotMatchDto exampleMatch;
 	private static MatchRepository matchRepository;
-	private static MatchDtoMatchMapper mapper;
+	private static RiotMatchDtoMatchMapper mapper;
 	private static RiotApiClient apiClient;
 
 
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
-		mapper = mock(MatchDtoMatchMapper.class);
+		mapper = mock(RiotMatchDtoMatchMapper.class);
 		matchRepository = mock(MatchRepository.class);
 		apiClient = mock(RiotApiClient.class);
 		matchService = new MatchService(matchRepository, mapper, apiClient);

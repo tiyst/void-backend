@@ -7,7 +7,7 @@ import org.mapstruct.MappingTarget;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 
 @Mapper(componentModel = "spring")
-public interface SummonerDtoSummonerMapper {
+public interface RiotSummonerMapper {
 
 	@Mapping(source = "profileIconId", target = "profileIcon")
 	@Mapping(source = "summonerLevel", target = "level")

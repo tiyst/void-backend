@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import st.tiy.budgetopgg.model.domain.rotation.Rotation;
 
 @Mapper(componentModel = "spring")
-public interface RotationMapper {
+public interface RiotRotationMapper {
 
 	@Mapping(source = "freeChampionIdsForNewPlayers", target = "rotationForNewPlayers")
 	@Mapping(source = "freeChampionIds", target = "rotation")

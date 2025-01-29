@@ -8,7 +8,7 @@ import st.tiy.budgetopgg.model.domain.summoner.Rank;
 import st.tiy.budgetopgg.model.domain.summoner.RankSeries;
 
 @Mapper(componentModel = "spring")
-public interface RankMapper {
+public interface RiotRankMapper {
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "rank", target = "division")

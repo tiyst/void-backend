@@ -7,7 +7,7 @@ import st.tiy.budgetopgg.api.Region;
 import st.tiy.budgetopgg.api.RiotApiClient;
 import st.tiy.budgetopgg.model.domain.match.Match;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
-import st.tiy.budgetopgg.model.mapper.MatchDtoMatchMapper;
+import st.tiy.budgetopgg.model.mapper.RiotMatchDtoMatchMapper;
 import st.tiy.budgetopgg.repository.MatchRepository;
 
 import java.util.Arrays;
@@ -19,14 +19,14 @@ import java.util.Optional;
 public class MatchService {
 
 	private final MatchRepository matchRepository;
-	private final MatchDtoMatchMapper mapper;
+	private final RiotMatchDtoMatchMapper riotMapper;
 	private final RiotApiClient apiClient;
 
 	public MatchService(MatchRepository matchRepository,
-	                    MatchDtoMatchMapper mapper,
+	                    RiotMatchDtoMatchMapper riotMapper,
 	                    RiotApiClient apiClient) {
 		this.matchRepository = matchRepository;
-		this.mapper = mapper;
+		this.riotMapper = riotMapper;
 		this.apiClient = apiClient;
 	}
 
@@ -42,6 +42,7 @@ public class MatchService {
 		return pullNewMatchesByPuuid(region, puuid);
 	}
 
+	// TODO When querying for new matches, update only since the last match timestamp
 	private List<Match> pullNewMatchesByPuuid(Region region, String puuid) {
 		String[] matchIds = apiClient.getMatchIds(region, puuid);
 
@@ -65,7 +66,7 @@ public class MatchService {
 			return Optional.empty();
 		}
 
-		return Optional.of(mapper.mapToMatch(match));
+		return Optional.of(riotMapper.mapToMatch(match));
 	}
 
 }

@@ -8,8 +8,9 @@ import st.tiy.budgetopgg.api.Server;
 import st.tiy.budgetopgg.model.domain.mastery.ChampionMastery;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
-import st.tiy.budgetopgg.model.mapper.AccountDtoSummonerMapper;
-import st.tiy.budgetopgg.model.mapper.SummonerDtoSummonerMapper;
+import st.tiy.budgetopgg.model.dto.DtoSummoner;
+import st.tiy.budgetopgg.model.mapper.RiotAccountMapper;
+import st.tiy.budgetopgg.model.mapper.RiotSummonerMapper;
 import st.tiy.budgetopgg.repository.SummonerRepository;
 
 import java.util.List;
@@ -22,23 +23,23 @@ public class SummonerService {
 	private final RankService rankService;
 	private final ChampionMasteryService masteryService;
 	private final SummonerRepository repository;
-	private final AccountDtoSummonerMapper accountDtoMapper;
-	private final SummonerDtoSummonerMapper summonerDtoMapper;
+	private final RiotAccountMapper riotAccountDtoMapper;
+	private final RiotSummonerMapper riotSummonerDtoMapper;
 	private final RiotApiClient apiClient;
 
 	public SummonerService(MatchService matchService,
 	                       RankService rankService,
 	                       ChampionMasteryService masteryService,
 	                       SummonerRepository repository,
-	                       AccountDtoSummonerMapper accountDtoMapper,
-	                       SummonerDtoSummonerMapper summonerDtoMapper,
+	                       RiotAccountMapper riotAccountDtoMapper,
+	                       RiotSummonerMapper riotSummonerDtoMapper,
 	                       RiotApiClient apiClient) {
 		this.matchService = matchService;
 		this.rankService = rankService;
 		this.masteryService = masteryService;
 		this.repository = repository;
-		this.accountDtoMapper = accountDtoMapper;
-		this.summonerDtoMapper = summonerDtoMapper;
+		this.riotAccountDtoMapper = riotAccountDtoMapper;
+		this.riotSummonerDtoMapper = riotSummonerDtoMapper;
 		this.apiClient = apiClient;
 	}
 
@@ -48,10 +49,10 @@ public class SummonerService {
 
 	public Summoner updateSummoner(Server server, String gameName, String tagLine) {
 		RiotAccountDto response = apiClient.getAccount(server, gameName, tagLine);
-		Summoner summoner = accountDtoMapper.mapAccountDtoToSummoner(response);
+		Summoner summoner = riotAccountDtoMapper.mapAccountDtoToSummoner(response);
 
 		RiotSummonerDTO summonerResponse = apiClient.getSummoner(server, summoner.getPuuid());
-		summonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
+		riotSummonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
 
 		this.matchService.getMatchesBySummoner(apiClient.serverToRegion(server), summoner);
 

@@ -12,13 +12,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MatchDtoRiotMatchMapperTest {
 
-	private static MatchDtoMatchMapper mapper;
+	private static RiotMatchDtoMatchMapper mapper;
 	private static RiotMatchDto riotMatchDto;
 
 	@BeforeAll
 	static void setUp() throws IOException {
 		riotMatchDto = FileLoaderUtil.loadFile("example/exampleAramMatch.json", RiotMatchDto.class);
-		mapper = new MatchDtoMatchMapperImpl();
+		mapper = new RiotMatchDtoMatchMapperImpl();
 	}
 
 	@Test

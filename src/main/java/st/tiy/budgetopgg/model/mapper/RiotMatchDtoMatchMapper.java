@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper(componentModel = "spring")
-public interface MatchDtoMatchMapper {
+public interface RiotMatchDtoMatchMapper {
 
 	// TODO Missions
 

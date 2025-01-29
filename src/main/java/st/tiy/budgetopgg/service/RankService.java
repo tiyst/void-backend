@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import st.tiy.budgetopgg.api.RiotApiClient;
 import st.tiy.budgetopgg.api.Server;
 import st.tiy.budgetopgg.model.domain.summoner.Rank;
-import st.tiy.budgetopgg.model.mapper.RankMapper;
+import st.tiy.budgetopgg.model.mapper.RiotRankMapper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 public class RankService {
 
-	private final RankMapper rankMapper;
+	private final RiotRankMapper riotRankMapper;
 	private final RiotApiClient apiClient;
 
-	public RankService(RankMapper rankMapper, RiotApiClient apiClient) {
-		this.rankMapper = rankMapper;
+	public RankService(RiotRankMapper riotRankMapper, RiotApiClient apiClient) {
+		this.riotRankMapper = riotRankMapper;
 		this.apiClient = apiClient;
 	}
 
@@ -25,7 +25,7 @@ public class RankService {
 		RiotLeagueEntryDTO[] url = apiClient.getRankEntries(server, summonerId);
 
 		return Arrays.stream(url)
-		             .map(this.rankMapper::mapToRank)
+		             .map(this.riotRankMapper::mapToRank)
 		             .toList();
 	}
 
