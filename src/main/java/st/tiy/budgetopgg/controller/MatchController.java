@@ -27,4 +27,9 @@ public class MatchController {
 		return this.matchService.getMatchesByPuuid(region, puuid);
 	}
 
+	@GetMapping("/{region}/{puuid}/update")
+	public List<Match> updateMatchesByPuuid(@PathVariable("region") Region region, @PathVariable("puuid") String puuid) {
+		return this.matchService.updateMatchesByPuuid(region, puuid);
+	}
+
 }

@@ -35,6 +35,10 @@ public class MatchService {
 	}
 
 	public List<Match> getMatchesByPuuid(Region region, String puuid) {
+		return matchRepository.findAllByParticipantIdsContaining(puuid);
+	}
+
+	public List<Match> updateMatchesByPuuid(Region region, String puuid) {
 		return pullNewMatchesByPuuid(region, puuid);
 	}
 
