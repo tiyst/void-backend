@@ -28,6 +28,7 @@ repositories {
 ext {
     mapstructVersion = '1.5.5.Final'
     lombokMapstructBindingVersion = '0.2.0'
+    apacheCommonsVersion = '3.17.0'
 }
 
 dependencies {
@@ -36,6 +37,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.apache.commons:commons-lang3:${apacheCommonsVersion}"
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'

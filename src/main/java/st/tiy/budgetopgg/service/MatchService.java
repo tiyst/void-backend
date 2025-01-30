@@ -10,6 +10,7 @@ import st.tiy.budgetopgg.model.domain.summoner.Summoner;
 import st.tiy.budgetopgg.model.mapper.RiotMatchDtoMatchMapper;
 import st.tiy.budgetopgg.repository.MatchRepository;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,8 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class MatchService {
+
+	public static final LocalDateTime MIN_LOCALDATETIME = LocalDateTime.of(2020, 1, 1, 0, 0);
 
 	private final MatchRepository matchRepository;
 	private final RiotMatchDtoMatchMapper riotMapper;
@@ -39,12 +42,15 @@ public class MatchService {
 	}
 
 	public List<Match> updateMatchesByPuuid(Region region, String puuid) {
-		return pullNewMatchesByPuuid(region, puuid);
+		return updateMatchesByPuuid(region, puuid, MIN_LOCALDATETIME);
 	}
 
-	// TODO When querying for new matches, update only since the last match timestamp
-	private List<Match> pullNewMatchesByPuuid(Region region, String puuid) {
-		String[] matchIds = apiClient.getMatchIds(region, puuid);
+	public List<Match> updateMatchesByPuuid(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
+		return pullNewMatchesByPuuid(region, puuid, lastMatchTimestamp);
+	}
+
+	private List<Match> pullNewMatchesByPuuid(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
+		String[] matchIds = apiClient.getMatchIds(region, puuid, lastMatchTimestamp);
 
 		List<Match> matches = Arrays.stream(matchIds)
 		                            .parallel()

@@ -6,6 +6,7 @@ import java.util.List;
 public record DtoMatch(
 	String endOfGameResult,
 	int gameDuration,
+	long gameEndTimestamp,
 	String gameMode,
 	String gameType,
 	int mapId,

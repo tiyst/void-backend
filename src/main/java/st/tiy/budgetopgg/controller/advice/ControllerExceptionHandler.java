@@ -15,12 +15,12 @@ public class ControllerExceptionHandler {
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Riot servers are down, please try again later")
 	@ExceptionHandler(RestClientException.class)
 	public void handleRestClientException(RestClientException exception) {
-		log.error("Error occurred: %s", exception);
+		log.error("Error occurred:", exception);
 	}
 
 	@ResponseStatus(value = HttpStatus.TOO_EARLY, reason = "Summoner recently updated, please wait")
 	@ExceptionHandler(SummonerUpdateTooFrequentException.class)
 	public void handleSummonerUpdateTooFrequentException(SummonerUpdateTooFrequentException exception) {
-		log.info("Summoner updating too frequently: %s", exception.toString());
+		log.info("Summoner updating too frequently: {}", exception.toString());
 	}
 }

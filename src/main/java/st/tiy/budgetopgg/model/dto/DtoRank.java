@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class DtoRank {
 
-	private String leagueId;
 	private String queueType;
 	private String tier;
 	private String division;

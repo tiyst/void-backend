@@ -9,15 +9,26 @@ import com.riotgames.model.rotation.RiotChampionInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.util.ArrayUtils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.Optional;
 
 import static st.tiy.budgetopgg.api.Region.AMERICAS;
 import static st.tiy.budgetopgg.api.Region.ASIA;
 import static st.tiy.budgetopgg.api.Region.ESPORTS;
 import static st.tiy.budgetopgg.api.Region.EUROPE;
-import static st.tiy.budgetopgg.api.RiotUrlConstants.*;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.ACCOUNT_BASE_URL;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.FETCH_MASTERY_BY_CHAMP_URL_SUFFIX;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.FETCH_MASTERY_IDS_URL;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.FETCH_MATCH_IDS_URL;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.FETCH_MATCH_URL;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.RANK_BASE_URL;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.ROTATION_BASE_URL;
+import static st.tiy.budgetopgg.api.RiotUrlConstants.SUMMONER_BASE_URL;
 import static st.tiy.budgetopgg.api.Server.*;
 
 @Slf4j
@@ -54,10 +65,21 @@ public class RiotApiClient {
 		return response;
 	}
 
-	public String[] getMatchIds(Region region, String puuid) {
+	public String[] getMatchIds(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
+		//startTime long 	Epoch timestamp in seconds. The matchlist started storing timestamps on June 16th, 2021. Any matches played before June 16th, 2021 won't be included in the results if the startTime filter is set.
+		//endTime 	long 	Epoch timestamp in seconds.
+		//queue     int 	Filter the list of match ids by a specific queue id. This filter is mutually inclusive of the type filter meaning any match ids returned must match both the queue and type filters.
+		//type      string 	Filter the list of match ids by the type of match. This filter is mutually inclusive of the queue filter meaning any match ids returned must match both the queue and type filters.
+		//start	    int     Defaults to 0. Start index.
+		//count     int     Defaults to 20. Valid values: 0 to 100. Number of match ids to return.
 		String url = FETCH_MATCH_IDS_URL.formatted(region, puuid);
-		String[] matchIds = this.restTemplate.getForObject(url, String[].class);
 
+		UriComponentsBuilder builder = UriComponentsBuilder
+				.fromUriString(url)
+				.queryParamIfPresent("startTime", Optional.of(lastMatchTimestamp.toEpochSecond(ZoneOffset.UTC)))
+				.queryParam("count", "10");
+
+		String[] matchIds = this.restTemplate.getForObject(builder.toUriString(), String[].class);
 		if (ArrayUtils.isEmpty(matchIds)) {
 			return new String[0];
 		}
