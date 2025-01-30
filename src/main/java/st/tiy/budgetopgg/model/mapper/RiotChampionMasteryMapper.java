@@ -10,8 +10,9 @@ import st.tiy.budgetopgg.model.domain.mastery.MasteryMilestone;
 @Mapper(componentModel = "spring")
 public interface RiotChampionMasteryMapper {
 
-	@Mapping(source = "nextSeasonMilestone", target = "masteryMilestone")
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "summoner", ignore = true)
+	@Mapping(source = "nextSeasonMilestone", target = "masteryMilestone")
 	ChampionMastery mapToChampionMastery(RiotChampionMastery championMastery);
 
 	@Mapping(target = "id", ignore = true)

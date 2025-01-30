@@ -9,6 +9,8 @@ import com.riotgames.model.match.RiotObjectiveDto;
 import com.riotgames.model.match.RiotObjectives;
 import com.riotgames.model.match.RiotParticipantDto;
 import com.riotgames.model.match.RiotPerks;
+import com.riotgames.model.match.RiotSelection;
+import com.riotgames.model.match.RiotStyle;
 import com.riotgames.model.match.RiotTeamDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,6 +21,8 @@ import st.tiy.budgetopgg.model.domain.match.team.Objective;
 import st.tiy.budgetopgg.model.domain.match.team.Participant;
 import st.tiy.budgetopgg.model.domain.match.team.Team;
 import st.tiy.budgetopgg.model.domain.match.team.runes.Perks;
+import st.tiy.budgetopgg.model.domain.match.team.runes.PerksSelection;
+import st.tiy.budgetopgg.model.domain.match.team.runes.PerksStyle;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -42,9 +46,32 @@ public interface RiotMatchDtoMatchMapper {
 		return match;
 	}
 
+	@Mapping(target = "summoner", ignore = true)
+	@Mapping(target = "endOfGameResult", ignore = true)
+	@Mapping(target = "gameCreation", ignore = true)
+	@Mapping(target = "gameDuration", ignore = true)
+	@Mapping(target = "gameEndTimestamp", ignore = true)
+	@Mapping(target = "gameId", ignore = true)
+	@Mapping(target = "gameMode", ignore = true)
+	@Mapping(target = "gameName", ignore = true)
+	@Mapping(target = "gameStartTimestamp", ignore = true)
+	@Mapping(target = "gameType", ignore = true)
+	@Mapping(target = "gameVersion", ignore = true)
+	@Mapping(target = "mapId", ignore = true)
+	@Mapping(target = "participantList", ignore = true)
+	@Mapping(target = "platformId", ignore = true)
+	@Mapping(target = "queueId", ignore = true)
+	@Mapping(target = "teams", ignore = true)
+	@Mapping(target = "tournamentCode", ignore = true)
+	@Mapping(target = "retrievedDate", ignore = true)
 	@Mapping(source = "participants", target = "participantIds")
 	void mapMetadataToMatch(@MappingTarget Match match, RiotMetadata metadata);
 
+	@Mapping(target = "matchId", ignore = true)
+	@Mapping(target = "summoner", ignore = true)
+	@Mapping(target = "dataVersion", ignore = true)
+	@Mapping(target = "participantIds", ignore = true)
+	@Mapping(target = "retrievedDate", ignore = true)
 	@Mapping(source = "participants", target = "participantList")
 	void mapInfoToMatch(@MappingTarget Match match, RiotInfo info);
 
@@ -53,14 +80,24 @@ public interface RiotMatchDtoMatchMapper {
 	@Mapping(source = "challenges", target = "challenges")
 	Participant mapToParticipant(RiotParticipantDto participantDto);
 
+	@Mapping(target = "id", ignore = true)
 	Objective mapToObjective(RiotObjectiveDto objectiveDto);
 
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "participant", ignore = true)
 	Challenges mapToChallenges(RiotChallenges challengesDto);
 
+	@Mapping(target = "id", ignore = true)
 	@Mapping(source = "statPerks.defense", target = "defense")
 	@Mapping(source = "statPerks.offense", target = "offense")
 	@Mapping(source = "statPerks.flex", target = "flex")
 	Perks mapToPerks(RiotPerks perksDto);
+
+	@Mapping(target = "id", ignore = true)
+	PerksStyle mapToPerksStyle(RiotStyle riotStyle);
+
+	@Mapping(target = "id", ignore = true)
+	PerksSelection mapToPerksSelection(RiotSelection riotSelection);
 
 	//TODO generify mapping to maps with T
 	default Map<String, Objective> mapObjectives(RiotObjectives objectives) {
