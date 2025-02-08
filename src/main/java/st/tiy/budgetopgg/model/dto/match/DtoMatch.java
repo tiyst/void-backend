@@ -10,7 +10,7 @@ public record DtoMatch(
 	String gameMode,
 	String gameType,
 	int mapId,
-	List<DtoParticipant> participantList,
+	List<DtoParticipant> participants,
 	String platformId,
 	int queueId,
 	List<DtoTeam> teams,

@@ -3,6 +3,7 @@ package st.tiy.budgetopgg.service;
 import com.riotgames.model.RiotMatchDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import st.tiy.budgetopgg.api.Region;
 import st.tiy.budgetopgg.api.RiotApiClient;
 import st.tiy.budgetopgg.model.domain.match.Match;
@@ -46,10 +47,6 @@ public class MatchService {
 	}
 
 	public List<Match> updateMatchesByPuuid(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
-		return pullNewMatchesByPuuid(region, puuid, lastMatchTimestamp);
-	}
-
-	private List<Match> pullNewMatchesByPuuid(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
 		String[] matchIds = apiClient.getMatchIds(region, puuid, lastMatchTimestamp);
 
 		List<Match> matches = Arrays.stream(matchIds)
@@ -65,10 +62,11 @@ public class MatchService {
 	}
 
 	private Optional<Match> pullMatchByMatchId(Region region, String matchId) {
-		RiotMatchDto match = apiClient.getMatch(region, matchId);
+		RiotMatchDto match;
 
-		if (match == null) {
-			log.error("Retrieving match failed for {}", matchId);
+		try {
+			match = apiClient.getMatch(region, matchId);
+		} catch (HttpClientErrorException e) {
 			return Optional.empty();
 		}
 

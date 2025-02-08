@@ -1,5 +1,6 @@
 package st.tiy.budgetopgg.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,9 @@ public class SummonerController {
 	}
 
 	@GetMapping("/{server}/{gameName}/{tagLine}")
-	public ResponseEntity<DtoSummoner> getSummoner(@PathVariable Server server, @PathVariable String gameName, @PathVariable String tagLine) {
+	public ResponseEntity<DtoSummoner> getSummoner(@PathVariable Server server,
+	                                               @PathVariable String gameName,
+	                                               @PathVariable String tagLine) {
 		Optional<DtoSummoner> summoner = service.getSummoner(server, gameName, tagLine);
 
 		return summoner.map(value -> ResponseEntity.status(HttpStatus.OK).body(value))
@@ -31,10 +34,16 @@ public class SummonerController {
 	}
 
 	@GetMapping("/{server}/{gameName}/{tagLine}/update")
-	public ResponseEntity<DtoSummoner> updateSummoner(@PathVariable Server server, @PathVariable String gameName, @PathVariable String tagLine) {
+	public ResponseEntity<DtoSummoner> updateSummoner(@PathVariable Server server,
+	                                                  @PathVariable String gameName,
+	                                                  @PathVariable String tagLine) {
 		DtoSummoner summoner = service.updateSummoner(server, gameName, tagLine);
 
-		return ResponseEntity.status(HttpStatus.OK).body(summoner);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		return ResponseEntity.status(HttpStatus.OK)
+		                     .headers(headers)
+		                     .body(summoner);
 	}
 
 }

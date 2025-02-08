@@ -9,13 +9,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import st.tiy.budgetopgg.model.domain.match.team.Participant;
 import st.tiy.budgetopgg.model.domain.match.team.Team;
 import st.tiy.budgetopgg.model.domain.summoner.Summoner;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -56,4 +58,16 @@ public class Match {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime retrievedDate;
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Match match = (Match) o;
+		return Objects.equals(matchId, match.matchId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(matchId);
+	}
 }
