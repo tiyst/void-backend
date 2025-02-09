@@ -56,11 +56,10 @@ public class SummonerService {
 		Summoner summoner = summonerOptional.get();
 		List<Match> matches = this.matchService.getMatchesBySummoner(apiClient.serverToRegion(server), summoner);
 
-		return Optional.of(mapToDtoSummoner(summoner, matches));
-	}
+		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
+		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
 
-	private DtoSummoner mapToDtoSummoner(Summoner summoner, List<Match> matches) {
-		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
+		return Optional.of(dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries));
 	}
 
 	public DtoSummoner updateSummoner(Server server, String gameName, String tagLine) {

@@ -11,6 +11,9 @@ spring:
     driver-class-name: org.h2.Driver
     username: dev
     password: ved
+  jpa:
+    hibernate:
+      ddl-auto: create
 
 logging:
   level:
