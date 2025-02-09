@@ -1,0 +1,9 @@
+api:
+  key: ${API_KEY}
+
+spring:
+  datasource:
+    url: postgresql://localhost:5432/mydb
+    driver-class-name: org.postgresql.Driver
+    username: prog
+    password: x
