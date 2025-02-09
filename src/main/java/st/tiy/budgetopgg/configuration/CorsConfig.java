@@ -14,8 +14,8 @@ public class CorsConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/api/**")
-				        .allowedOrigins("http://localhost:5173/", "https://void-frontend-j2qc3.kinsta.page", "https://tiy.st")
-				        .allowedMethods("GET", "POST", "PUT", "DELETE")
+				        .allowedOrigins("http://localhost:5173/", "https://void-frontend-j2qc3.kinsta.page/", "https://tiy.st/")
+				        .allowedMethods("GET", "POST")
 				        .allowedHeaders("*")
 				        .allowCredentials(true); // Allows credentials (e.g., cookies)
 			}
