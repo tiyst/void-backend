@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
+import st.tiy.budgetopgg.exception.MissingApiKeyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class OpGgConfiguration {
 	@Bean
 	public String apiKey(@Value("${api.key}") String apiKey) {
 		if (isBlank(apiKey)) {
-//			throw new MissingApiKeyException();
+			throw new MissingApiKeyException();
 		}
 
 		return apiKey;
