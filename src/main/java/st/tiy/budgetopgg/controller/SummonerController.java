@@ -30,7 +30,7 @@ public class SummonerController {
 		Optional<DtoSummoner> summoner = service.getSummoner(server, gameName, tagLine);
 
 		return summoner.map(value -> ResponseEntity.status(HttpStatus.OK).body(value))
-		               .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+		               .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
 	}
 
 	@GetMapping("/{server}/{gameName}/{tagLine}/update")
