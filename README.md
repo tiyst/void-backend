@@ -7,6 +7,7 @@
 - _**dev**_ folder contains
   - hoppscotch collection for local testing. (If you introduce a new endpoint or change an existing one, please update the collection)
   - codestyle file, please import and use this. Let's keep the code consistent.
+- _**dev/utils**_ contains python scripts for parsing riot ids
 
 ### Deployment
 - _application-prod.yaml_ with api key filled in necessary
