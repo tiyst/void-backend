@@ -69,15 +69,27 @@ public class SummonerService {
 		RiotSummonerDTO summonerResponse = apiClient.getSummoner(server, summoner.getPuuid());
 		riotSummonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
 
-		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
-		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
-		summoner.setRank(ranks);
-		summoner.setMasteries(masteries);
+		summoner.setRank(pullRanks(server, summoner));
+		summoner.setMasteries(pullMasteries(server, summoner));
 
 		List<Match> matches = this.matchService.updateMatchesByPuuid(apiClient.serverToRegion(server), summoner.getPuuid());
 
 		repository.save(summoner);
 		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
+	}
+
+	private List<ChampionMastery> pullMasteries(Server server, Summoner summoner) {
+		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
+		masteries.forEach(m -> m.setSummoner(summoner));
+
+		return masteries;
+	}
+
+	private List<Rank> pullRanks(Server server, Summoner summoner) {
+		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
+		ranks.forEach(rank -> rank.setSummoner(summoner));
+
+		return ranks;
 	}
 
 }
