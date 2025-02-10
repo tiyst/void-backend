@@ -14,3 +14,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org:
+      hibernate: WARN
+      springframework:
+        web: WARN
+    st:
+      tiy: WARN
+    root: WARN
