@@ -49,7 +49,7 @@ public class SummonerService {
 	}
 
 	public Optional<DtoSummoner> getSummoner(Server server, String gameName, String tagLine) {
-		Optional<Summoner> summonerOptional = repository.findByGameNameAndTagLine(gameName, tagLine);
+		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
 		if (summonerOptional.isEmpty()) {
 			return Optional.empty();
 		}

@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface SummonerRepository extends JpaRepository<Summoner, String> {
 
-	Optional<Summoner> findByGameNameAndTagLine(String gameName, String tagLine);
+	Optional<Summoner> findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(String gameName, String tagLine);
 
 }
