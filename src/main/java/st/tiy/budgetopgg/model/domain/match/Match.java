@@ -7,8 +7,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import st.tiy.budgetopgg.model.domain.match.team.Participant;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "match",  uniqueConstraints = @UniqueConstraint(columnNames = "matchId"))
 @Getter
 @Setter
 public class Match {

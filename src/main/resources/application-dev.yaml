@@ -14,9 +14,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
 
 logging:
   level:
+    root: INFO
     org:
       hibernate: INFO
       springframework:

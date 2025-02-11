@@ -7,10 +7,10 @@ import com.riotgames.model.RiotSummonerDTO;
 import com.riotgames.model.mastery.RiotChampionMastery;
 import com.riotgames.model.rotation.RiotChampionInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.thymeleaf.util.ArrayUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -44,6 +44,7 @@ public class RiotApiClient {
 	public RiotAccountDto getAccount(Server server, String gameName, String tagLine) {
 		String accountUrl = ACCOUNT_BASE_URL.formatted(serverToRegion(server), gameName, tagLine);
 
+		log.info("accountUrl: {}", accountUrl);
 		return restTemplate.getForObject(accountUrl, RiotAccountDto.class);
 	}
 
