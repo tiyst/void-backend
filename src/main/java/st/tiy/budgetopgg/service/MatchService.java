@@ -2,6 +2,7 @@ package st.tiy.budgetopgg.service;
 
 import com.riotgames.model.RiotMatchDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import st.tiy.budgetopgg.api.Region;
@@ -56,6 +57,13 @@ public class MatchService {
 		                            .map(Optional::get)
 		                            .toList();
 
+		matches.forEach(match -> {
+			try {
+				matchRepository.save(match);
+			} catch (DataIntegrityViolationException ex) {
+				log.info("Match save {}", ex.getMessage());
+			}
+		});
 		matchRepository.saveAll(matches);
 
 		return matches;
