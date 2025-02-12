@@ -65,7 +65,6 @@ public class MatchService {
 				log.info("Match save {}", ex.getMessage());
 			}
 		});
-		matchRepository.saveAll(matches);
 
 		return matches;
 	}
