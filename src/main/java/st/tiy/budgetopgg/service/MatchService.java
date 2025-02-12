@@ -57,6 +57,7 @@ public class MatchService {
 		                            .map(Optional::get)
 		                            .toList();
 
+		log.info("Starting save matches");
 		matches.forEach(match -> {
 			try {
 				matchRepository.save(match);
