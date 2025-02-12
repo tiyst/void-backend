@@ -2,6 +2,8 @@ package st.tiy.budgetopgg.service;
 
 import com.riotgames.model.RiotAccountDto;
 import com.riotgames.model.RiotSummonerDTO;
+import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import st.tiy.budgetopgg.api.RiotApiClient;
 import st.tiy.budgetopgg.api.Server;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class SummonerService {
 
 	private final MatchService matchService;
@@ -49,6 +52,7 @@ public class SummonerService {
 	}
 
 	public Optional<DtoSummoner> getSummoner(Server server, String gameName, String tagLine) {
+		log.info("Get summoner by gameName: {}, tagLine: {}", gameName, tagLine);
 		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
 		if (summonerOptional.isEmpty()) {
 			return Optional.empty();
@@ -59,10 +63,12 @@ public class SummonerService {
 		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
 		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
 
+		log.info("Get summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 		return Optional.of(dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries));
 	}
 
 	public DtoSummoner updateSummoner(Server server, String gameName, String tagLine) {
+		log.info("Update summoner by gameName: {}, tagLine: {}", gameName, tagLine);
 		RiotAccountDto response = apiClient.getAccount(server, gameName, tagLine);
 		Summoner summoner = riotAccountDtoMapper.mapAccountDtoToSummoner(response);
 
@@ -75,6 +81,8 @@ public class SummonerService {
 		List<Match> matches = this.matchService.updateMatchesByPuuid(apiClient.serverToRegion(server), summoner.getPuuid());
 
 		repository.save(summoner);
+		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
+
 		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
 	}
 

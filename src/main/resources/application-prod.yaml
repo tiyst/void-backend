@@ -18,9 +18,9 @@ spring:
 logging:
   level:
     org:
-      hibernate: WARN
+      hibernate: INFO
       springframework:
-        web: WARN
+        web: INFO
     st:
-      tiy: WARN
-    root: WARN
+      tiy: INFO
+    root: INFO
