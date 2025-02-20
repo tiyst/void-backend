@@ -9,6 +9,9 @@ spring:
   jackson:
     mapper:
       ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+  threads:
+    virtual:
+      enabled: true
 
 management:
   endpoints:
