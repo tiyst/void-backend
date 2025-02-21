@@ -97,7 +97,12 @@ public class SummonerService {
 			LocalDateTime lastUpdate = LocalDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.systemDefault());
 
 			if (now.isBefore(lastUpdate.plusMinutes(updateThrottleMinutes))) {
-				throw new SummonerUpdateTooFrequentException(summoner, lastUpdate.plusMinutes(updateThrottleMinutes));
+				LocalDateTime updateAvailable = lastUpdate.plusMinutes(updateThrottleMinutes);
+				String errorMessage = "Summoner %s#%s updated too frequently. Try again in %s".formatted(
+						summoner.getGameName(),
+						summoner.getTagLine(),
+						updateAvailable.toString());
+				throw new SummonerUpdateTooFrequentException(errorMessage);
 			}
 		}
 	}
