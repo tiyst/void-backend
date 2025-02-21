@@ -3,9 +3,11 @@ package st.tiy.voidapp.service;
 import com.riotgames.model.RiotAccountDto;
 import com.riotgames.model.RiotSummonerDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import st.tiy.voidapp.api.RiotApiClient;
 import st.tiy.voidapp.api.Server;
+import st.tiy.voidapp.exception.SummonerUpdateTooFrequentException;
 import st.tiy.voidapp.model.domain.mastery.ChampionMastery;
 import st.tiy.voidapp.model.domain.match.Match;
 import st.tiy.voidapp.model.domain.summoner.Rank;
@@ -16,12 +18,17 @@ import st.tiy.voidapp.model.mapper.RiotAccountMapper;
 import st.tiy.voidapp.model.mapper.RiotSummonerMapper;
 import st.tiy.voidapp.repository.SummonerRepository;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
 public class SummonerService {
+	@Value("${voidapp.update.enabled:true}") private boolean updateThrottleEnabled;
+	@Value("${voidapp.update.delay:2}") private int updateThrottleMinutes;
 
 	private final MatchService matchService;
 	private final RankService rankService;
@@ -54,6 +61,7 @@ public class SummonerService {
 		log.info("Get summoner by gameName: {}, tagLine: {}", gameName, tagLine);
 		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
 		if (summonerOptional.isEmpty()) {
+			log.info("Get summoner by gameName: {}, tagLine: {} EMPTY.", gameName, tagLine);
 			return Optional.empty();
 		}
 		Summoner summoner = summonerOptional.get();
@@ -68,11 +76,9 @@ public class SummonerService {
 
 	public DtoSummoner updateSummoner(Server server, String gameName, String tagLine) {
 		log.info("Update summoner by gameName: {}, tagLine: {}", gameName, tagLine);
-		RiotAccountDto response = apiClient.getAccount(server, gameName, tagLine);
-		Summoner summoner = riotAccountDtoMapper.mapAccountDtoToSummoner(response);
 
-		RiotSummonerDTO summonerResponse = apiClient.getSummoner(server, summoner.getPuuid());
-		riotSummonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
+		Summoner summoner = pullSummoner(server, gameName, tagLine);
+		checkUpdateThrottling(summoner);
 
 		summoner.setRank(pullRanks(server, summoner));
 		summoner.setMasteries(pullMasteries(server, summoner));
@@ -83,6 +89,17 @@ public class SummonerService {
 		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 
 		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
+	}
+
+	private void checkUpdateThrottling(Summoner summoner) {
+		if (updateThrottleEnabled) {
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime lastUpdate = LocalDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.systemDefault());
+
+			if (now.isBefore(lastUpdate.plusMinutes(updateThrottleMinutes))) {
+				throw new SummonerUpdateTooFrequentException(summoner, lastUpdate.plusMinutes(updateThrottleMinutes));
+			}
+		}
 	}
 
 	private List<ChampionMastery> pullMasteries(Server server, Summoner summoner) {
@@ -97,6 +114,14 @@ public class SummonerService {
 		ranks.forEach(rank -> rank.setSummoner(summoner));
 
 		return ranks;
+	}
+
+	private Summoner pullSummoner(Server server, String gameName, String tagLine) {
+		RiotAccountDto response = apiClient.getAccount(server, gameName, tagLine);
+		Summoner summoner = riotAccountDtoMapper.mapAccountDtoToSummoner(response);
+		RiotSummonerDTO summonerResponse = apiClient.getSummoner(server, summoner.getPuuid());
+
+		return riotSummonerDtoMapper.mapSummonerDtoToSummoner(summonerResponse, summoner);
 	}
 
 }

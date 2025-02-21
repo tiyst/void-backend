@@ -27,3 +27,7 @@ logging:
         web: INFO
     st:
       tiy: INFO
+
+voidapp:
+  update:
+    enabled: false
