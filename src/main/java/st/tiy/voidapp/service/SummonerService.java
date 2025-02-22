@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import st.tiy.voidapp.api.RiotApiClient;
 import st.tiy.voidapp.api.Server;
+import st.tiy.voidapp.exception.SummonerNotFoundException;
 import st.tiy.voidapp.exception.SummonerUpdateTooFrequentException;
 import st.tiy.voidapp.model.domain.mastery.ChampionMastery;
 import st.tiy.voidapp.model.domain.match.Match;
@@ -57,12 +58,12 @@ public class SummonerService {
 		this.apiClient = apiClient;
 	}
 
-	public Optional<DtoSummoner> getSummoner(Server server, String gameName, String tagLine) {
+	public DtoSummoner getSummoner(Server server, String gameName, String tagLine) {
 		log.info("Get summoner by gameName: {}, tagLine: {}", gameName, tagLine);
 		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
 		if (summonerOptional.isEmpty()) {
 			log.info("Get summoner by gameName: {}, tagLine: {} EMPTY.", gameName, tagLine);
-			return Optional.empty();
+			throw new SummonerNotFoundException("Summoner not found %s#%s".formatted(gameName, tagLine));
 		}
 		Summoner summoner = summonerOptional.get();
 		List<Match> matches = this.matchService.getMatchesBySummoner(apiClient.serverToRegion(server), summoner);
@@ -71,15 +72,16 @@ public class SummonerService {
 		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
 
 		log.info("Get summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
-		return Optional.of(dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries));
+		return dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries);
 	}
 
 	public DtoSummoner updateSummoner(Server server, String gameName, String tagLine) {
 		log.info("Update summoner by gameName: {}, tagLine: {}", gameName, tagLine);
 
-		Summoner summoner = pullSummoner(server, gameName, tagLine);
-		checkUpdateThrottling(summoner);
+		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
+		summonerOptional.ifPresent(this::checkUpdateThrottling);
 
+		Summoner summoner = pullSummoner(server, gameName, tagLine);
 		summoner.setRank(pullRanks(server, summoner));
 		summoner.setMasteries(pullMasteries(server, summoner));
 
