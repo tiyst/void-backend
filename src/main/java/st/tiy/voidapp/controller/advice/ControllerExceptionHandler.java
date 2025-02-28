@@ -31,7 +31,8 @@ public class ControllerExceptionHandler {
 
 		ApiErrorResponse response = new ApiErrorResponse(
 				HttpStatus.TOO_EARLY,
-				"Summoner recently updated, please wait."
+				"Summoner recently updated, please wait.",
+				exception.getUpdateAvailableTimestamp()
 		);
 
 		return ResponseEntity.status(HttpStatus.TOO_EARLY).body(response);

@@ -20,8 +20,8 @@ import st.tiy.voidapp.model.mapper.RiotSummonerMapper;
 import st.tiy.voidapp.repository.SummonerRepository;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,10 +61,12 @@ public class SummonerService {
 	public DtoSummoner getSummoner(Server server, String gameName, String tagLine) {
 		log.info("Get summoner by gameName: {}, tagLine: {}", gameName, tagLine);
 		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
+
 		if (summonerOptional.isEmpty()) {
 			log.info("Get summoner by gameName: {}, tagLine: {} EMPTY.", gameName, tagLine);
 			throw new SummonerNotFoundException("Summoner not found %s#%s".formatted(gameName, tagLine));
 		}
+
 		Summoner summoner = summonerOptional.get();
 		List<Match> matches = this.matchService.getMatchesBySummoner(apiClient.serverToRegion(server), summoner);
 
@@ -97,14 +99,16 @@ public class SummonerService {
 		if (updateThrottleEnabled) {
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime lastUpdate = LocalDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.systemDefault());
+			ZonedDateTime now = ZonedDateTime.now();
+			ZonedDateTime lastUpdate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.systemDefault());
 
 			if (now.isBefore(lastUpdate.plusMinutes(updateThrottleMinutes))) {
-				LocalDateTime updateAvailable = lastUpdate.plusMinutes(updateThrottleMinutes);
+				ZonedDateTime updateAvailable = lastUpdate.plusMinutes(updateThrottleMinutes);
 				String errorMessage = "Summoner %s#%s updated too frequently. Try again in %s".formatted(
 						summoner.getGameName(),
 						summoner.getTagLine(),
 						updateAvailable.toString());
-				throw new SummonerUpdateTooFrequentException(errorMessage);
+				throw new SummonerUpdateTooFrequentException(errorMessage, updateAvailable);
 			}
 		}
 	}

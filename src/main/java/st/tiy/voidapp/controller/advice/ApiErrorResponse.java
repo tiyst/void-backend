@@ -2,14 +2,16 @@ package st.tiy.voidapp.controller.advice;
 
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
-
 public record ApiErrorResponse(
 		int status,
 		String message,
-		LocalDateTime timestamp
+		String timestamp
 ) {
 	public ApiErrorResponse(HttpStatus status, String message) {
-		this(status.value(), message, LocalDateTime.now());
+		this(status.value(), message, null);
+	}
+
+	public ApiErrorResponse(HttpStatus status, String message, String timestamp) {
+		this(status.value(), message, timestamp);
 	}
 }
