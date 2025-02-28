@@ -97,8 +97,6 @@ public class SummonerService {
 
 	private void checkUpdateThrottling(Summoner summoner) {
 		if (updateThrottleEnabled) {
-			LocalDateTime now = LocalDateTime.now();
-			LocalDateTime lastUpdate = LocalDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.systemDefault());
 			ZonedDateTime now = ZonedDateTime.now();
 			ZonedDateTime lastUpdate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.systemDefault());
 
