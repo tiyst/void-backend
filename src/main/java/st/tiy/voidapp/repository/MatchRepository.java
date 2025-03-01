@@ -9,4 +9,6 @@ public interface MatchRepository extends JpaRepository<Match, String> {
 
 	List<Match> findAllByParticipantIdsContaining(String puuid);
 
+	List<Match> findAllByGameStartTimestampBefore(long gameStartTimestampBefore);
+
 }
