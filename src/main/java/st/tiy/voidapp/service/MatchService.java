@@ -62,7 +62,7 @@ public class MatchService {
 			try {
 				matchRepository.save(match);
 			} catch (DataIntegrityViolationException ex) {
-				log.info("Match save {}", ex.getMessage());
+				log.info("Match save exception occurred, save failed: {}", ex.getMessage());
 			}
 		});
 

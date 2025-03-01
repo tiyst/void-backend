@@ -20,6 +20,10 @@ management:
         include: health
 
 voidapp:
+  cleanup:
+    enabled: true
+    cutoff-days: 30
+    cron: 0 0 2 * * ?
   update:
     enabled: true
     delay: 2 # Update summoner delay in minutes

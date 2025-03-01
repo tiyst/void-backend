@@ -24,3 +24,12 @@ logging:
     st:
       tiy: INFO
     root: INFO
+
+voidapp:
+  cleanup:
+    enabled: true
+    cutoff-days: 21
+    cron: 0 0 4 * * ?
+  update:
+    enabled: true
+    delay: 2 # Update summoner delay in minutes

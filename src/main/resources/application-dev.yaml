@@ -29,5 +29,10 @@ logging:
       tiy: INFO
 
 voidapp:
+  cleanup:
+    enabled: false
+    cutoff-days: 0
+    cron: 0 */3 * * * *
   update:
     enabled: false
+    delay: 2
