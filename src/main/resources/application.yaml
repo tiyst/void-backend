@@ -20,6 +20,8 @@ management:
         include: health
 
 voidapp:
+  mastery:
+    count: 4
   cleanup:
     enabled: true
     cutoff-days: 30
