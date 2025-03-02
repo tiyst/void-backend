@@ -22,14 +22,20 @@ import st.tiy.voidapp.repository.SummonerRepository;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class SummonerService {
-	@Value("${voidapp.update.enabled:true}") private boolean updateThrottleEnabled;
-	@Value("${voidapp.update.delay:2}") private int updateThrottleMinutes;
+	@Value("${voidapp.update.enabled:true}")
+	private boolean updateThrottleEnabled;
+	@Value("${voidapp.update.delay:2}")
+	private int updateThrottleMinutes;
 
 	private final MatchService matchService;
 	private final RankService rankService;
@@ -83,16 +89,39 @@ public class SummonerService {
 		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
 		summonerOptional.ifPresent(this::checkUpdateThrottling);
 
+		Summoner summoner = basicUpdateSummoner(server, gameName, tagLine);
+		List<Match> matches = this.matchService.updateMatchesByPuuid(apiClient.serverToRegion(server), summoner.getPuuid());
+
+		List<Summoner> summoners = transformParticipants(server, matches);
+		summoners.add(summoner);
+
+		repository.saveAll(summoners);
+		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
+
+		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
+	}
+
+	/**
+	 * Used when match is pulled, and we want to pull basic summoner structure without pulling their matches.
+	 * This reduces friction for new users if they don't have to update manually and see their basic stats and matches other users have updated.
+	 */
+	private Summoner basicUpdateSummoner(Server server, String gameName, String tagLine) {
 		Summoner summoner = pullSummoner(server, gameName, tagLine);
 		summoner.setRank(pullRanks(server, summoner));
 		summoner.setMasteries(pullMasteries(server, summoner));
 
-		List<Match> matches = this.matchService.updateMatchesByPuuid(apiClient.serverToRegion(server), summoner.getPuuid());
+		log.info("Basic fetch summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
+		return summoner;
+	}
 
-		repository.save(summoner);
-		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
+	private List<Summoner> transformParticipants(Server server, List<Match> matches) {
+		Set<String> uniquePuuids = new HashSet<>();
 
-		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
+		return matches.stream()
+		              .flatMap(match -> match.getParticipantList().stream())
+		              .filter(p -> uniquePuuids.add(p.getPuuid()))
+		              .map(p -> basicUpdateSummoner(server, p.getRiotIdGameName(), p.getRiotIdTagline()))
+		              .collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	private void checkUpdateThrottling(Summoner summoner) {
