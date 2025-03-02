@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import st.tiy.voidapp.model.domain.match.team.runes.Perks;
@@ -16,6 +17,7 @@ import java.util.Map;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Participant {
 
 	@Id
