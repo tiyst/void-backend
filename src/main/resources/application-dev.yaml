@@ -36,3 +36,5 @@ voidapp:
   update:
     enabled: false
     delay: 2
+  processingQueue:
+    enabled: true
