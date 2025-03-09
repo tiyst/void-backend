@@ -30,8 +30,8 @@ public class TaskProcessingService {
 	private void executeTask(VoidTask<?> task) {
 		switch (task) {
 			case BasicSummonerProcessTask processTask -> {
-				BasicSummonerProcessTaskParams params = processTask.getParameters();
-				// Pull basic summoner
+				BasicSummonerProcessTaskParams p = processTask.getParameters();
+				this.summonerService.updateBasicSummoner(p.server(), p.gameName(), p.tagLine());
 			}
 			default -> log.error("Void task type not recognized {}", task);
 		}
