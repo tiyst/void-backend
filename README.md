@@ -11,16 +11,24 @@
 
 ### Environment variables
 _**voidapp**_ parent contains environment variables for (so far) 2 big features
-- Update throttling _voidapp.update.enabled_
+- Update throttling _**voidapp.update.enabled**_
   - Throttling users from updating the same summoner too fast.
   - Delay in minutes configurable _voidapp.update.delay_
-- Match cleanup service _voidapp.cleanup_
+- Match cleanup service _**voidapp.cleanup**_
   - Removal of old matches, configurable for how old matches can be before deleted (in days) voidapp.cleanup.cutoff-days
-  - Cron string configurable _voidapp.cleanup.cron_
+  - Cron string configurable _**voidapp.cleanup.cron**_
+
+# Background queue
+- Background task processing for summoner and matches processing that is not time sensitive
+- For use cases such as
+  - Pulling basic data (profile, ranks, masteries), for summoners that are in matches with updated summoner (reducing friction for people who are not updating themselves)
+  - Trophy room updates
+- Update through _**voidapp.processingQueue**_
+  - Change delay between processing _**voidapp.processingQueue.fixedDelay**_
+  - Enable through _**voidapp.processingQueue.enabled**_
 
 # Deployment
 - _application-prod.yaml_ with api key filled in necessary
-
 
 # Examples
 - example response json files are stored in test resources

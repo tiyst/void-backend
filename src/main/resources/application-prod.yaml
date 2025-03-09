@@ -33,3 +33,6 @@ voidapp:
   update:
     enabled: true
     delay: 2 # Update summoner delay in minutes
+  processingQueue:
+    enabled: true
+    fixedDelay: 5000 # Delay between finished task 1 and start task 2
