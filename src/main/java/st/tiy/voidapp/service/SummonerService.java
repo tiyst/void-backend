@@ -11,23 +11,25 @@ import st.tiy.voidapp.exception.SummonerNotFoundException;
 import st.tiy.voidapp.exception.SummonerUpdateTooFrequentException;
 import st.tiy.voidapp.model.domain.mastery.ChampionMastery;
 import st.tiy.voidapp.model.domain.match.Match;
+import st.tiy.voidapp.model.domain.match.team.Participant;
 import st.tiy.voidapp.model.domain.summoner.Rank;
 import st.tiy.voidapp.model.domain.summoner.Summoner;
 import st.tiy.voidapp.model.dto.DtoSummoner;
 import st.tiy.voidapp.model.dto.mapper.DtoSummonerMapper;
 import st.tiy.voidapp.model.mapper.RiotAccountMapper;
 import st.tiy.voidapp.model.mapper.RiotSummonerMapper;
+import st.tiy.voidapp.queue.TaskQueueService;
+import st.tiy.voidapp.queue.task.summonerfetch.BasicSummonerProcessTask;
+import st.tiy.voidapp.queue.task.summonerfetch.BasicSummonerProcessTaskParams;
 import st.tiy.voidapp.repository.SummonerRepository;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -45,6 +47,7 @@ public class SummonerService {
 	private final RiotSummonerMapper riotSummonerDtoMapper;
 	private final DtoSummonerMapper dtoSummonerMapper;
 	private final RiotApiClient apiClient;
+	private final TaskQueueService taskQueueService;
 
 	public SummonerService(MatchService matchService,
 	                       RankService rankService,
@@ -53,7 +56,8 @@ public class SummonerService {
 	                       RiotAccountMapper riotAccountDtoMapper,
 	                       RiotSummonerMapper riotSummonerDtoMapper,
 	                       DtoSummonerMapper dtoSummonerMapper,
-	                       RiotApiClient apiClient) {
+	                       RiotApiClient apiClient,
+	                       TaskQueueService taskQueueService) {
 		this.matchService = matchService;
 		this.rankService = rankService;
 		this.masteryService = masteryService;
@@ -62,6 +66,7 @@ public class SummonerService {
 		this.riotSummonerDtoMapper = riotSummonerDtoMapper;
 		this.dtoSummonerMapper = dtoSummonerMapper;
 		this.apiClient = apiClient;
+		this.taskQueueService = taskQueueService;
 	}
 
 	public DtoSummoner getSummoner(Server server, String gameName, String tagLine) {
@@ -89,13 +94,13 @@ public class SummonerService {
 		Optional<Summoner> summonerOptional = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
 		summonerOptional.ifPresent(this::checkUpdateThrottling);
 
-		Summoner summoner = basicUpdateSummoner(server, gameName, tagLine);
+		Summoner summoner = fetchBasicSummonerInfo(server, gameName, tagLine);
 		List<Match> matches = this.matchService.updateMatchesByPuuid(apiClient.serverToRegion(server), summoner.getPuuid());
 
-		List<Summoner> summoners = transformParticipants(server, matches);
-		summoners.add(summoner);
+		List<Participant> matchParticipants = filterUniqueSummonersFromMatches(matches);
+		submitBasicFetchTasks(server, matchParticipants);
 
-		repository.saveAll(summoners);
+		repository.save(summoner);
 		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 
 		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
@@ -105,23 +110,37 @@ public class SummonerService {
 	 * Used when match is pulled, and we want to pull basic summoner structure without pulling their matches.
 	 * This reduces friction for new users if they don't have to update manually and see their basic stats and matches other users have updated.
 	 */
-	private Summoner basicUpdateSummoner(Server server, String gameName, String tagLine) {
+	public void updateBasicSummoner(Server server, String gameName, String tagLine) {
+		Summoner summoner = fetchBasicSummonerInfo(server, gameName, tagLine);
+
+		repository.save(summoner);
+	}
+
+	private void submitBasicFetchTasks(Server server, List<Participant> participants) {
+		participants.forEach(participant -> taskQueueService.submitTask(new BasicSummonerProcessTask(
+				BasicSummonerProcessTaskParams.builder()
+				                              .server(server)
+				                              .gameName(participant.getRiotIdGameName())
+				                              .tagLine(participant.getRiotIdTagline())
+				                              .build()
+		)));
+	}
+
+	private Summoner fetchBasicSummonerInfo(Server server, String gameName, String tagLine) {
 		Summoner summoner = pullSummoner(server, gameName, tagLine);
 		summoner.setRank(pullRanks(server, summoner));
 		summoner.setMasteries(pullMasteries(server, summoner));
 
-		log.info("Basic fetch summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 		return summoner;
 	}
 
-	private List<Summoner> transformParticipants(Server server, List<Match> matches) {
+	private List<Participant> filterUniqueSummonersFromMatches(List<Match> matches) {
 		Set<String> uniquePuuids = new HashSet<>();
 
 		return matches.stream()
 		              .flatMap(match -> match.getParticipantList().stream())
 		              .filter(p -> uniquePuuids.add(p.getPuuid()))
-		              .map(p -> basicUpdateSummoner(server, p.getRiotIdGameName(), p.getRiotIdTagline()))
-		              .collect(Collectors.toCollection(ArrayList::new));
+		              .toList();
 	}
 
 	private void checkUpdateThrottling(Summoner summoner) {
