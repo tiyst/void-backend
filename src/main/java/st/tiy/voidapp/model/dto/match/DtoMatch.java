@@ -7,6 +7,7 @@ public record DtoMatch(
 	String endOfGameResult,
 	int gameDuration,
 	long gameEndTimestamp,
+	long gameId,
 	String gameMode,
 	String gameType,
 	int mapId,
