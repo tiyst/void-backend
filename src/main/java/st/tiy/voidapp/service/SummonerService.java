@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static st.tiy.voidapp.utils.SummonerUtils.isSummonerEligibleForUpdate;
+
 @Service
 @Slf4j
 public class SummonerService {
@@ -38,6 +40,8 @@ public class SummonerService {
 	private boolean updateThrottleEnabled;
 	@Value("${voidapp.update.delay:2}")
 	private int updateThrottleMinutes;
+	@Value("${voidapp.update.min-age-threshold:21}")
+	private int minAgeThreshold; // Minimum days after which summoner is eligible for basic update through match participation
 
 	private final MatchService matchService;
 	private final RankService rankService;
@@ -111,6 +115,11 @@ public class SummonerService {
 	 * This reduces friction for new users if they don't have to update manually and see their basic stats and matches other users have updated.
 	 */
 	public void updateBasicSummoner(Server server, String gameName, String tagLine) {
+		Optional<Summoner> optSummoner = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
+		if (optSummoner.isPresent() && !isSummonerEligibleForUpdate(optSummoner.get(), minAgeThreshold)) {
+			return;
+		}
+
 		Summoner summoner = fetchBasicSummonerInfo(server, gameName, tagLine);
 
 		repository.save(summoner);
@@ -146,7 +155,7 @@ public class SummonerService {
 	private void checkUpdateThrottling(Summoner summoner) {
 		if (updateThrottleEnabled) {
 			ZonedDateTime now = ZonedDateTime.now();
-			ZonedDateTime lastUpdate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.systemDefault());
+			ZonedDateTime lastUpdate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(summoner.getLastUpdated()), ZoneId.of("UTC"));
 
 			if (now.isBefore(lastUpdate.plusMinutes(updateThrottleMinutes))) {
 				ZonedDateTime updateAvailable = lastUpdate.plusMinutes(updateThrottleMinutes);
