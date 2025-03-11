@@ -22,7 +22,7 @@ public class Summoner {
 
 	private String accountId;
 	private String summonerId;
-	private long lastUpdated; // Unix epoch of last time this summoner has been updated
+	private long lastUpdated; // Unix epoch in seconds of last time this summoner has been updated
 
 	private String gameName;
 	private String tagLine;
