@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static st.tiy.voidapp.utils.SummonerUtils.getCurrentTimestampForLastUpdated;
 import static st.tiy.voidapp.utils.SummonerUtils.isSummonerEligibleForUpdate;
 
 @Service
@@ -121,6 +122,7 @@ public class SummonerService {
 		}
 
 		Summoner summoner = fetchBasicSummonerInfo(server, gameName, tagLine);
+		summoner.setLastUpdated(getCurrentTimestampForLastUpdated());
 
 		repository.save(summoner);
 	}

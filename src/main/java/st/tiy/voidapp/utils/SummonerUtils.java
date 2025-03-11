@@ -15,6 +15,10 @@ public class SummonerUtils {
 		return LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
 	}
 
+	public static long getCurrentTimestampForLastUpdated() {
+		return Instant.now().getEpochSecond();
+	}
+
 	public static boolean isSummonerEligibleForUpdate(Summoner summoner, int minDaysThreshold) {
 		LocalDateTime lastUpdated = transformLastUpdateFlag(summoner.getLastUpdated());
 		LocalDateTime now = LocalDateTime.now();
