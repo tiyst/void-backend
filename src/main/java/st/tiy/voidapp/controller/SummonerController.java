@@ -1,5 +1,6 @@
 package st.tiy.voidapp.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import st.tiy.voidapp.service.SummonerService;
 
 @RestController
 @RequestMapping("/api/summoner")
+@Slf4j
 public class SummonerController {
 
 	private final SummonerService service;
@@ -25,22 +27,31 @@ public class SummonerController {
 	public ResponseEntity<DtoSummoner> getSummoner(@PathVariable Server server,
 	                                               @PathVariable String gameName,
 	                                               @PathVariable String tagLine) {
+		long start = System.currentTimeMillis();
 		DtoSummoner summoner = service.getSummoner(server, gameName, tagLine);
 
-		return ResponseEntity.status(HttpStatus.OK)
-		                     .headers(getGenericHeaders())
-		                     .body(summoner);
+		ResponseEntity<DtoSummoner> body = ResponseEntity.status(HttpStatus.OK)
+		                                                 .headers(getGenericHeaders())
+		                                                 .body(summoner);
+
+		long end = System.currentTimeMillis();
+		log.info("Total execution time: {} ms", end - start);
+		return body;
 	}
 
 	@GetMapping("/{server}/{gameName}/{tagLine}/update")
 	public ResponseEntity<DtoSummoner> updateSummoner(@PathVariable Server server,
 	                                                  @PathVariable String gameName,
 	                                                  @PathVariable String tagLine) {
+		long start = System.currentTimeMillis();
 		DtoSummoner summoner = service.updateSummoner(server, gameName, tagLine);
 
-		return ResponseEntity.status(HttpStatus.OK)
-		                     .headers(getGenericHeaders())
-		                     .body(summoner);
+		ResponseEntity<DtoSummoner> body = ResponseEntity.status(HttpStatus.OK)
+		                                                 .headers(getGenericHeaders())
+		                                                 .body(summoner);
+		long end = System.currentTimeMillis();
+		log.info("Total execution time: {} ms", end - start);
+		return body;
 	}
 
 	private HttpHeaders getGenericHeaders() {
