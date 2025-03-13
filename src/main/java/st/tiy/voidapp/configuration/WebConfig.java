@@ -14,8 +14,6 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addMapping("/api/**")
 		        .allowedOrigins(
 				        "http://localhost:5173",
-				        "https://void-frontend-j2qc3.kinsta.page",
-						"void-backend-5kppz.kinsta.app",
 				        "https://tiy.st"
 		        )
 		        .allowedMethods("GET", "POST")

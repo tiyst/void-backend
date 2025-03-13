@@ -1,12 +1,94 @@
 package st.tiy.voidapp.model.dto.match;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Map;
 
+// Properties ignored in attempt to shorten Jackson serialization times
 @Getter
 @Setter
+@JsonIgnoreProperties({
+		"allInPings",
+		"assistMePings",
+		"baronKills",
+		"basicPings",
+		"bountyLevel",
+		"challenges",
+		"champExperience",
+		"championTransform",
+		"commandPings",
+		"consumablesPurchased",
+		"damageDealtToBuildings",
+		"damageDealtToObjectives",
+		"damageDealtToTurrets",
+		"damageSelfMitigated",
+		"dangerPings",
+		"detectorWardsPlaced",
+		"dragonKills",
+		"eligibleForProgression",
+		"enemyMissingPings",
+		"enemyVisionPings",
+		"firstBloodAssist",
+		"firstBloodKill",
+		"firstTowerAssist",
+		"firstTowerKill",
+		"gameEndedInEarlySurrender",
+		"gameEndedInSurrender",
+		"getBackPings",
+		"holdPings",
+		"individualPosition",
+		"inhibitorKills",
+		"inhibitorTakedowns",
+		"inhibitorsLost",
+		"killingSprees",
+		"lane",
+		"largestCriticalStrike",
+		"largestKillingSpree",
+		"largestMultiKill",
+		"longestTimeSpentLiving",
+		"magicDamageTaken",
+		"needVisionPings",
+		"nexusKills",
+		"nexusLost",
+		"nexusTakedowns",
+		"objectivesStolen",
+		"objectivesStolenAssists",
+		"onMyWayPings",
+		"physicalDamageTaken",
+		"pushPings",
+		"role",
+		"sightWardsBoughtInGame",
+		"spell1Casts",
+		"spell2Casts",
+		"spell3Casts",
+		"spell4Casts",
+		"summoner1Casts",
+		"summoner2Casts",
+		"summonerName",
+		"teamEarlySurrendered",
+		"timeCCingOthers",
+		"timePlayed",
+		"totalAllyJungleMinionsKilled",
+		"totalDamageShieldedOnTeammates",
+		"totalDamageTaken",
+		"totalEnemyJungleMinionsKilled",
+		"totalHeal",
+		"totalHealsOnTeammates",
+		"totalTimeCCDealt",
+		"totalTimeSpentDead",
+		"totalUnitsHealed",
+		"trueDamageTaken",
+		"turretKills",
+		"turretTakedowns",
+		"turretsLost",
+		"unrealKills",
+		"visionClearedPings",
+		"visionWardsBoughtInGame",
+		"wardsKilled",
+		"wardsPlaced"
+})
 public class DtoParticipant {
 
 	private int allInPings;
@@ -112,7 +194,7 @@ public class DtoParticipant {
 	private String summonerName;
 	private boolean teamEarlySurrendered;
 	private int teamId;
-	private String teamPosition;
+	private String teamPosition; // Preferred way to know what role is played
 	private int timeCCingOthers;
 	private int timePlayed;
 	private int totalAllyJungleMinionsKilled;
