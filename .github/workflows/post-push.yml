@@ -3,10 +3,8 @@ name: Build and Test Java Project
 on:
   push:
     branches:
-      - main
+      - '**'
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -20,9 +18,14 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '21'
+        distribution: 'temurin'
+        cache: gradle
 
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Grant execute permission to Gradle
+      run: chmod +x gradlew
 
     - name: Run tests
-      run: ./gradlew test
+      run: ./gradlew test --continue
+
+    - name: Build with Gradle
+      run: ./gradlew build --continue
