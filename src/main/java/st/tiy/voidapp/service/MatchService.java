@@ -2,7 +2,6 @@ package st.tiy.voidapp.service;
 
 import com.riotgames.model.RiotMatchDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import st.tiy.voidapp.api.Region;
@@ -49,8 +48,13 @@ public class MatchService {
 
 	public List<Match> updateMatchesByPuuid(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
 		String[] matchIds = apiClient.getMatchIds(region, puuid, lastMatchTimestamp);
+		List<String> existingMatches = matchRepository.findAllByMatchIdIsIn(List.of(matchIds))
+		                                              .stream()
+		                                              .map(Match::getMatchId)
+		                                              .toList();
 
 		List<Match> matches = Arrays.stream(matchIds)
+		                            .filter(id -> !existingMatches.contains(id))
 		                            .parallel()
 		                            .map(id -> pullMatchByMatchId(region, id))
 		                            .filter(Optional::isPresent)
@@ -58,14 +62,8 @@ public class MatchService {
 		                            .toList();
 
 		log.info("Starting save matches");
-		matches.forEach(match -> {
-			try {
-				matchRepository.save(match);
-			} catch (DataIntegrityViolationException ex) {
-				log.info("Match save exception occurred, save failed: {}", ex.getMessage());
-			}
-		});
-
+		matchRepository.saveAll(matches);
+		log.info("Finished save matches");
 		return matches;
 	}
 
