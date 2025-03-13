@@ -30,6 +30,7 @@ ext {
     mapstructVersion = '1.5.5.Final'
     lombokMapstructBindingVersion = '0.2.0'
     apacheCommonsVersion = '3.17.0'
+    jacksonAfterburner = '2.18.3'
 }
 
 dependencies {
@@ -39,6 +40,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "org.apache.commons:commons-lang3:${apacheCommonsVersion}"
+    implementation "com.fasterxml.jackson.module:jackson-module-afterburner:${jacksonAfterburner}"
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
