@@ -89,8 +89,9 @@ public class SummonerService {
 		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
 		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
 
+		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries);
 		log.info("Get summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
-		return dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries);
+		return dtoSummoner;
 	}
 
 	public DtoSummoner updateSummoner(Server server, String gameName, String tagLine) {
@@ -106,9 +107,10 @@ public class SummonerService {
 		submitBasicFetchTasks(server, matchParticipants);
 
 		repository.save(summoner);
-		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
+		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches);
 
-		return dtoSummonerMapper.toDtoSummoner(summoner, matches);
+		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
+		return dtoSummoner;
 	}
 
 	/**
