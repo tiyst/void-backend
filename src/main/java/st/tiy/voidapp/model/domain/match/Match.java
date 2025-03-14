@@ -11,7 +11,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import st.tiy.voidapp.model.domain.match.team.Participant;
 import st.tiy.voidapp.model.domain.match.team.Team;
@@ -25,6 +27,8 @@ import java.util.Objects;
 @Table(name = "match",  uniqueConstraints = @UniqueConstraint(columnNames = "matchId"))
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Match {
 
 	@Id
