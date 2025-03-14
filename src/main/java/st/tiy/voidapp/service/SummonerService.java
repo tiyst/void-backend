@@ -89,6 +89,7 @@ public class SummonerService {
 		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
 		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
 
+		log.info("Get summoner by gameName: {}, tagLine: {} start mapping.", gameName, tagLine);
 		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries);
 		log.info("Get summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 		return dtoSummoner;
