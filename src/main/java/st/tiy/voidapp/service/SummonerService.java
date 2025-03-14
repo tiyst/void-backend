@@ -44,6 +44,7 @@ public class SummonerService {
 	@Value("${voidapp.update.min-age-threshold:21}")
 	private int minAgeThreshold; // Minimum days after which summoner is eligible for basic update through match participation
 
+
 	private final MatchService matchService;
 	private final RankService rankService;
 	private final ChampionMasteryService masteryService;
@@ -86,7 +87,7 @@ public class SummonerService {
 		Summoner summoner = summonerOptional.get();
 		List<Match> matches = this.matchService.getMatchesBySummoner(apiClient.serverToRegion(server), summoner);
 
-		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
+		this.rankService.getRanksBySummonerId(server, summoner.getSummonerId()).subscribe(summoner::setRank);
 		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
 
 		log.info("Get summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
@@ -178,7 +179,7 @@ public class SummonerService {
 	}
 
 	private List<Rank> pullRanks(Server server, Summoner summoner) {
-		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
+		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId()).block();
 		ranks.forEach(rank -> rank.setSummoner(summoner));
 
 		return ranks;

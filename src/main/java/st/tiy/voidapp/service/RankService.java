@@ -1,7 +1,7 @@
 package st.tiy.voidapp.service;
 
-import com.riotgames.model.RiotLeagueEntryDTO;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 import st.tiy.voidapp.api.RiotApiClient;
 import st.tiy.voidapp.api.Server;
 import st.tiy.voidapp.model.domain.summoner.Rank;
@@ -21,12 +21,14 @@ public class RankService {
 		this.apiClient = apiClient;
 	}
 
-	public List<Rank> getRanksBySummonerId(Server server, String summonerId) {
-		RiotLeagueEntryDTO[] url = apiClient.getRankEntries(server, summonerId);
-
-		return Arrays.stream(url)
-		             .map(this.riotRankMapper::mapToRank)
-		             .toList();
+	public Mono<List<Rank>> getRanksBySummonerId(Server server, String summonerId) {
+		return apiClient.getRankEntries(server, summonerId)
+		                .flatMap(entries -> {
+			                List<Rank> list = Arrays.stream(entries)
+			                                        .map(this.riotRankMapper::mapToRank)
+			                                        .toList();
+			                return Mono.just(list);
+		                });
 	}
 
 }

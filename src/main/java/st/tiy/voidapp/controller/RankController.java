@@ -24,7 +24,7 @@ public class RankController {
 
 	@GetMapping(path = "/{server}/{summonerId}")
 	public List<Rank> getRanksBySummonerId(@PathVariable(name = "server") Server server, @PathVariable(name = "summonerId") String summonerId) {
-		return this.rankService.getRanksBySummonerId(server, summonerId);
+		return this.rankService.getRanksBySummonerId(server, summonerId).block();
 	}
 
 }

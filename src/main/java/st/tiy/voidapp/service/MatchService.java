@@ -4,6 +4,7 @@ import com.riotgames.model.RiotMatchDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import reactor.core.publisher.Mono;
 import st.tiy.voidapp.api.Region;
 import st.tiy.voidapp.api.RiotApiClient;
 import st.tiy.voidapp.model.domain.match.Match;
@@ -47,7 +48,8 @@ public class MatchService {
 	}
 
 	public List<Match> updateMatchesByPuuid(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
-		String[] matchIds = apiClient.getMatchIds(region, puuid, lastMatchTimestamp);
+		Mono.
+		Mono<String[]> matchIds = apiClient.getMatchIds(region, puuid, lastMatchTimestamp);
 		List<String> existingMatches = matchRepository.findAllByMatchIdIsIn(List.of(matchIds))
 		                                              .stream()
 		                                              .map(Match::getMatchId)
