@@ -84,7 +84,7 @@ public class SummonerService {
 		}
 
 		Summoner summoner = summonerOptional.get();
-		List<Match> matches = this.matchService.getMatchesBySummoner(apiClient.serverToRegion(server), summoner);
+		List<Match> matches = this.matchService.getInitialMatchesByPuuid(summoner.getPuuid());
 
 		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
 		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());

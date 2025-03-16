@@ -34,6 +34,7 @@ import static st.tiy.voidapp.api.Server.*;
 @Slf4j
 @Service
 public class RiotApiClient {
+	public static final LocalDateTime MIN_LOCALDATETIME = LocalDateTime.of(2020, 1, 1, 0, 0);
 
 	private final RestTemplate restTemplate;
 
@@ -66,7 +67,11 @@ public class RiotApiClient {
 		return response;
 	}
 
-	public String[] getMatchIds(Region region, String puuid, LocalDateTime lastMatchTimestamp) {
+	public String[] getMatchIds(Region region, String puuid) {
+		return getMatchIds(region, puuid, LocalDateTime.now());
+	}
+
+	public String[] getMatchIds(Region region, String puuid, LocalDateTime endTimestamp) {
 		//startTime long 	Epoch timestamp in seconds. The matchlist started storing timestamps on June 16th, 2021. Any matches played before June 16th, 2021 won't be included in the results if the startTime filter is set.
 		//endTime 	long 	Epoch timestamp in seconds.
 		//queue     int 	Filter the list of match ids by a specific queue id. This filter is mutually inclusive of the type filter meaning any match ids returned must match both the queue and type filters.
@@ -77,7 +82,8 @@ public class RiotApiClient {
 
 		UriComponentsBuilder builder = UriComponentsBuilder
 				.fromUriString(url)
-				.queryParamIfPresent("startTime", Optional.of(lastMatchTimestamp.toEpochSecond(ZoneOffset.UTC)))
+				.queryParamIfPresent("startTime", Optional.of(MIN_LOCALDATETIME.toEpochSecond(ZoneOffset.UTC)))
+				.queryParamIfPresent("endTime", Optional.of(endTimestamp.toEpochSecond(ZoneOffset.UTC)))
 				.queryParam("count", "10");
 
 		String[] matchIds = this.restTemplate.getForObject(builder.toUriString(), String[].class);

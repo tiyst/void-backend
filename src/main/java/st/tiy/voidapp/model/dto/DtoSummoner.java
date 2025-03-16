@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class DtoSummoner {
+	private String puuid;
 	private String gameName;
 	private String tagLine;
 	private long lastUpdated; // Unix epoch of last time this summoner has been updated
