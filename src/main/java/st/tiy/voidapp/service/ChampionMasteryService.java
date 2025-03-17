@@ -37,9 +37,9 @@ public class ChampionMasteryService {
 		RiotChampionMastery[] championMastery = apiClient.getChampionMastery(server, puuid);
 
 		return Arrays.stream(championMastery)
+		             .limit(masteryCountToReturn)
 		             .map(riotChampionMasteryMapper::mapToChampionMastery)
 		             .sorted(Comparator.comparingInt(ChampionMastery::getChampionPoints).reversed())
-		             .limit(masteryCountToReturn)
 		             .toList();
 	}
 }
