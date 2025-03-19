@@ -174,14 +174,14 @@ public class SummonerService {
 	}
 
 	private List<ChampionMastery> pullMasteries(Server server, Summoner summoner) {
-		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
+		List<ChampionMastery> masteries = this.masteryService.pullMasteryByPuuid(server, summoner.getPuuid());
 		masteries.forEach(m -> m.setSummoner(summoner));
 
 		return masteries;
 	}
 
 	private List<Rank> pullRanks(Server server, Summoner summoner) {
-		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
+		List<Rank> ranks = this.rankService.pullRanksBySummonerId(server, summoner.getSummonerId());
 		ranks.forEach(rank -> rank.setSummoner(summoner));
 
 		return ranks;

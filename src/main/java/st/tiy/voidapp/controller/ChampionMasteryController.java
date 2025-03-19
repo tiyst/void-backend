@@ -25,13 +25,13 @@ public class ChampionMasteryController {
 	@GetMapping("/{server}/{puuid}")
 	public List<ChampionMastery> getMasteryForPuuid(@PathVariable("server") Server server,
 	                                                @PathVariable("puuid") String puuid) {
-		return championMasteryService.getMasteryByPuuid(server, puuid);
+		return championMasteryService.pullMasteryByPuuid(server, puuid);
 	}
 
 	@GetMapping("/{server}/{puuid}/champion/{championId}")
 	public ChampionMastery getMasteryForPuuidAndChampionId(@PathVariable("server") Server server,
 	                                                             @PathVariable("puuid") String puuid,
 	                                                             @PathVariable("championId") String championId) {
-		return championMasteryService.getMasteryByPuuidAndChampionId(server, puuid, championId);
+		return championMasteryService.pullMasteryByPuuidAndChampionId(server, puuid, championId);
 	}
 }
