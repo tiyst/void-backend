@@ -131,13 +131,14 @@ public class SummonerService {
 	}
 
 	private void submitBasicFetchTasks(Server server, List<Participant> participants) {
-		participants.forEach(participant -> taskQueueService.submitTask(new BasicSummonerProcessTask(
-				BasicSummonerProcessTaskParams.builder()
-				                              .server(server)
-				                              .gameName(participant.getRiotIdGameName())
-				                              .tagLine(participant.getRiotIdTagline())
-				                              .build()
-		)));
+		participants.forEach(participant ->
+				taskQueueService.submitTask(new BasicSummonerProcessTask(
+						BasicSummonerProcessTaskParams.builder()
+						                              .server(server)
+						                              .gameName(participant.getRiotIdGameName())
+						                              .tagLine(participant.getRiotIdTagline())
+						                              .build()
+				)));
 	}
 
 	private Summoner fetchBasicSummonerInfo(Server server, String gameName, String tagLine) {

@@ -31,5 +31,5 @@ voidapp:
     delay: 2 # Update summoner delay in minutes
     min-age-threshold: 21 # Max days threshold, if summoner lastUpdated is older than this flag, it's eligible for basic update
   processingQueue:
-    enabled: true
     fixedDelay: 5000
+    basicSummonerFetch: true

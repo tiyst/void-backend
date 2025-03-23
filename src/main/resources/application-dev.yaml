@@ -37,4 +37,4 @@ voidapp:
     enabled: false
     delay: 2
   processingQueue:
-    enabled: false
+    basicSummonerFetch: false
