@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import st.tiy.voidapp.model.domain.summoner.Summoner;
 import st.tiy.voidapp.trophy.trophies.Trophy;
 import st.tiy.voidapp.trophy.trophies.TrophyBestKda;
+import st.tiy.voidapp.trophy.trophies.TrophyHighestDamage;
 import st.tiy.voidapp.trophy.trophies.TrophyLongestTimeSpentDead;
 import st.tiy.voidapp.trophy.trophies.TrophyMostCastedSpells;
 import st.tiy.voidapp.trophy.trophies.TrophyMostCreepScore;
@@ -30,6 +31,7 @@ public class TrophyFactory {
 		registerTrophy(TrophyMostCastedSpells.class, TrophyMostCastedSpells::new);
 		registerTrophy(TrophyMostPings.class, TrophyMostPings::new);
 		registerTrophy(TrophyMostCreepScore.class, TrophyMostCreepScore::new);
+		registerTrophy(TrophyHighestDamage.class, TrophyHighestDamage::new);
 	}
 
 	private <T extends Trophy> void registerTrophy(Class<T> type, Supplier<? extends T> supplier) {

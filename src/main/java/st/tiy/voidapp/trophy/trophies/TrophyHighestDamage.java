@@ -2,25 +2,26 @@ package st.tiy.voidapp.trophy.trophies;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import lombok.extern.slf4j.Slf4j;
 import st.tiy.voidapp.model.domain.match.Match;
 
 import java.util.Comparator;
 
-import static st.tiy.voidapp.trophy.TrophyUtils.extractPingsCountFromMatch;
+import static st.tiy.voidapp.trophy.TrophyUtils.extractDamageFromMatchForSummoner;
 
+@Slf4j
 @Entity
-@DiscriminatorValue("MOST_PINGS")
-public class TrophyMostPings extends Trophy {
+@DiscriminatorValue("HIGHEST_DMG")
+public class TrophyHighestDamage extends Trophy {
 
-	public TrophyMostPings() {
-		super("Most pings", "Most pings");
+	public TrophyHighestDamage() {
+		super("Highest damage", "Highest damage");
 	}
 
 	@Override
 	public String getFormattedBestValue(Match match) {
-		return extractPingsCountFromMatch(match, summoner.getPuuid()) + " pings";
+		return extractDamageFromMatchForSummoner(match, summoner.getPuuid()) + " dmg";
 	}
-
 
 	@Override
 	public boolean isNewMatchBetterThanCurrentBest(Match newMatch) {
@@ -31,6 +32,7 @@ public class TrophyMostPings extends Trophy {
 
 	@Override
 	public Comparator<Match> matchComparator() {
-		return Comparator.comparingInt(match -> extractPingsCountFromMatch(match, summoner.getPuuid()));
+		return Comparator.comparingDouble(match -> extractDamageFromMatchForSummoner(match, summoner.getPuuid()));
 	}
+
 }

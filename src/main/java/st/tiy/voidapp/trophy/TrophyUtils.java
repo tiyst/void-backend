@@ -18,42 +18,51 @@ public class TrophyUtils {
 		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
 
 		return participant.map(TrophyUtils::calculateKda)
-		                  .orElse(Double.MIN_VALUE);
+		                  .orElse(0d);
+	}
+	public static int extractDamageFromMatchForSummoner(Match match, String puuid) {
+		if (match == null || isGameArena(match)) {
+			return 0;
+		}
+		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
+
+		return participant.map(Participant::getTotalDamageDealtToChampions)
+		                  .orElse(0);
 	}
 
 	public static int extractTimeSpentDeadFromMatch(Match match, String puuid) {
 		if (match == null || isGameArena(match)) {
-			return Integer.MIN_VALUE;
+			return 0;
 		}
 
 		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
-		return participant.map(Participant::getTotalTimeSpentDead).orElse(Integer.MIN_VALUE);
+		return participant.map(Participant::getTotalTimeSpentDead).orElse(0);
 	}
 
 	public static int extractSpellUsageFromMatch(Match match, String puuid) {
 		if (match == null || isGameArena(match)) {
-			return Integer.MIN_VALUE;
+			return 0;
 		}
 
 		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
 		return participant.map(value -> value.getSpell1Casts() + value.getSpell2Casts() + value.getSpell3Casts() + value.getSpell4Casts())
-		                  .orElse(Integer.MIN_VALUE);
+		                  .orElse(0);
 
 	}
 
 	public static int extractCreepScoreFromMatch(Match match, String puuid) {
 		if (match == null) {
-			return Integer.MIN_VALUE;
+			return 0;
 		}
 
 		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
 		return participant.map(Participant::getTotalMinionsKilled)
-		                  .orElse(Integer.MIN_VALUE);
+		                  .orElse(0);
 	}
 
 	public static int extractPingsCountFromMatch(Match match, String puuid) {
 		if (match == null) {
-			return Integer.MIN_VALUE;
+			return 0;
 		}
 
 		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
@@ -70,8 +79,7 @@ public class TrophyUtils {
 				                  + value.getOnMyWayPings()
 				                  + value.getPushPings()
 				                  + value.getVisionClearedPings())
-		                  .orElse(Integer.MIN_VALUE);
-
+		                  .orElse(0);
 	}
 
 	public static Optional<Participant> extractParticipantFromMatch(Match match, String puuid) {
