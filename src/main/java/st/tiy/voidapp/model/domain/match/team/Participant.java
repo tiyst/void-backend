@@ -13,6 +13,7 @@ import lombok.Setter;
 import st.tiy.voidapp.model.domain.match.team.runes.Perks;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -160,4 +161,16 @@ public class Participant {
 	private int wardsPlaced;
 	private boolean win;
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		Participant that = (Participant) obj;
+		return Objects.equals(puuid, that.puuid); // Assuming puuid uniquely identifies a participant
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(puuid);
+	}
 }

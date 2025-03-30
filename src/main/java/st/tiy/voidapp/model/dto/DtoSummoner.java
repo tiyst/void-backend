@@ -19,4 +19,5 @@ public class DtoSummoner {
 	private List<DtoRank> rank;
 	private List<DtoChampionMastery> masteries;
 	private List<DtoMatch> matches;
+	private List<DtoTrophy> trophies;
 }

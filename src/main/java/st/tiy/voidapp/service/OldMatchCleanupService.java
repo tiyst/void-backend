@@ -36,7 +36,10 @@ public class OldMatchCleanupService {
 		Instant cutoffInstant = Instant.now().minus(maxDaysAge, ChronoUnit.DAYS);
 		long cutoffTimestamp = cutoffInstant.getEpochSecond() * 1000;
 
-		List<Match> oldMatches = matchRepository.findAllByGameStartTimestampBefore(cutoffTimestamp);
+		List<Match> oldMatches = matchRepository.findAllByGameStartTimestampBefore(cutoffTimestamp)
+		                                        .stream()
+		                                        .filter(match -> match.getTrophiedPuuids().isEmpty())
+		                                        .toList();
 
 		if (!oldMatches.isEmpty()) {
 			matchRepository.deleteAll(oldMatches);

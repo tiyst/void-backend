@@ -59,7 +59,7 @@ public class MatchService {
 		                            .toList();
 
 		log.info("Starting save matches");
-		matchRepository.saveAll(matches);
+		matchRepository.saveAllAndFlush(matches);
 		log.info("Finished save matches");
 		return matches;
 	}
