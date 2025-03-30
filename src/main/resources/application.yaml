@@ -22,7 +22,7 @@ management:
 voidapp:
   mastery:
     count: 4
-  cleanup:
+  cleanup: # Old matches cleanup
     enabled: true
     cutoff-days: 30
     cron: 0 0 2 * * ?

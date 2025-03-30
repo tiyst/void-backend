@@ -20,8 +20,10 @@ import st.tiy.voidapp.model.domain.match.team.Team;
 import st.tiy.voidapp.model.domain.summoner.Summoner;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "match",  uniqueConstraints = @UniqueConstraint(columnNames = "matchId"))
@@ -65,6 +67,9 @@ public class Match {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime retrievedDate;
+
+	@ElementCollection
+	private Set<String> trophiedPuuids = new HashSet<>();
 
 	@Override
 	public boolean equals(Object o) {

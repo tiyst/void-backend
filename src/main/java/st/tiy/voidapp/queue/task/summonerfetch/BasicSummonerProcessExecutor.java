@@ -25,7 +25,7 @@ public class BasicSummonerProcessExecutor extends VoidTaskExecutor<BasicSummoner
 		}
 
 		BasicSummonerProcessTaskParams p = params.getParameters();
-		this.summonerService.updateBasicSummoner(p.getServer(), p.getGameName(), p.getTagLine());
+		this.summonerService.updateBasicSummoner(p.getServer(), p.getGameName(), p.getTagLine(), p.getMatches());
 	}
 
 	@Override

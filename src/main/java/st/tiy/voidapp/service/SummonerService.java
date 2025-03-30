@@ -22,14 +22,16 @@ import st.tiy.voidapp.queue.TaskQueueService;
 import st.tiy.voidapp.queue.task.summonerfetch.BasicSummonerProcessTask;
 import st.tiy.voidapp.queue.task.summonerfetch.BasicSummonerProcessTaskParams;
 import st.tiy.voidapp.repository.SummonerRepository;
+import st.tiy.voidapp.trophy.TrophyRoomService;
+import st.tiy.voidapp.trophy.trophies.Trophy;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import static st.tiy.voidapp.utils.SummonerUtils.getCurrentTimestampForLastUpdated;
 import static st.tiy.voidapp.utils.SummonerUtils.isSummonerEligibleForUpdate;
@@ -37,6 +39,7 @@ import static st.tiy.voidapp.utils.SummonerUtils.isSummonerEligibleForUpdate;
 @Service
 @Slf4j
 public class SummonerService {
+	private final TrophyRoomService trophyRoomService;
 	@Value("${voidapp.update.enabled:true}")
 	private boolean updateThrottleEnabled;
 	@Value("${voidapp.update.delay:2}")
@@ -62,7 +65,7 @@ public class SummonerService {
 	                       RiotSummonerMapper riotSummonerDtoMapper,
 	                       DtoSummonerMapper dtoSummonerMapper,
 	                       RiotApiClient apiClient,
-	                       TaskQueueService taskQueueService) {
+	                       TaskQueueService taskQueueService, TrophyRoomService trophyRoomService) {
 		this.matchService = matchService;
 		this.rankService = rankService;
 		this.masteryService = masteryService;
@@ -72,6 +75,7 @@ public class SummonerService {
 		this.dtoSummonerMapper = dtoSummonerMapper;
 		this.apiClient = apiClient;
 		this.taskQueueService = taskQueueService;
+		this.trophyRoomService = trophyRoomService;
 	}
 
 	public DtoSummoner getSummoner(Server server, String gameName, String tagLine) {
@@ -88,9 +92,10 @@ public class SummonerService {
 
 		List<Rank> ranks = this.rankService.getRanksBySummonerId(server, summoner.getSummonerId());
 		List<ChampionMastery> masteries = this.masteryService.getMasteryByPuuid(server, summoner.getPuuid());
+		List<Trophy> trophies = this.trophyRoomService.getTrophies(summoner);
 
 		log.info("Get summoner by gameName: {}, tagLine: {} start mapping.", gameName, tagLine);
-		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries);
+		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches, ranks, masteries, trophies);
 		log.info("Get summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 		return dtoSummoner;
 	}
@@ -104,11 +109,14 @@ public class SummonerService {
 		Summoner summoner = fetchBasicSummonerInfo(server, gameName, tagLine);
 		List<Match> matches = this.matchService.updateMatchesByPuuid(apiClient.serverToRegion(server), summoner.getPuuid());
 
-		List<Participant> matchParticipants = filterUniqueSummonersFromMatches(matches);
+		repository.save(summoner);
+
+		List<Trophy> trophies = trophyRoomService.processMatches(matches, summoner);
+
+		Map<Participant, List<Match>> matchParticipants = filterUniqueSummonersFromMatches(matches);
 		submitBasicFetchTasks(server, matchParticipants);
 
-		repository.save(summoner);
-		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches);
+		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches, trophies);
 
 		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 		return dtoSummoner;
@@ -118,7 +126,7 @@ public class SummonerService {
 	 * Used when match is pulled, and we want to pull basic summoner structure without pulling their matches.
 	 * This reduces friction for new users if they don't have to update manually and see their basic stats and matches other users have updated.
 	 */
-	public void updateBasicSummoner(Server server, String gameName, String tagLine) {
+	public void updateBasicSummoner(Server server, String gameName, String tagLine, List<Match> matches) {
 		Optional<Summoner> optSummoner = repository.findSummonerByGameNameIgnoreCaseAndTagLineIgnoreCase(gameName, tagLine);
 		if (optSummoner.isPresent() && !isSummonerEligibleForUpdate(optSummoner.get(), minAgeThreshold)) {
 			return;
@@ -128,15 +136,17 @@ public class SummonerService {
 		summoner.setLastUpdated(getCurrentTimestampForLastUpdated());
 
 		repository.save(summoner);
+		trophyRoomService.processMatches(matches, summoner);
 	}
 
-	private void submitBasicFetchTasks(Server server, List<Participant> participants) {
-		participants.forEach(participant ->
+	private void submitBasicFetchTasks(Server server, Map<Participant, List<Match>> participants) {
+		participants.forEach((participant, matches) ->
 				taskQueueService.submitTask(new BasicSummonerProcessTask(
 						BasicSummonerProcessTaskParams.builder()
 						                              .server(server)
 						                              .gameName(participant.getRiotIdGameName())
 						                              .tagLine(participant.getRiotIdTagline())
+						                              .matches(matches)
 						                              .build()
 				)));
 	}
@@ -149,13 +159,14 @@ public class SummonerService {
 		return summoner;
 	}
 
-	private List<Participant> filterUniqueSummonersFromMatches(List<Match> matches) {
-		Set<String> uniquePuuids = new HashSet<>();
-
+	private Map<Participant, List<Match>> filterUniqueSummonersFromMatches(List<Match> matches) {
 		return matches.stream()
-		              .flatMap(match -> match.getParticipantList().stream())
-		              .filter(p -> uniquePuuids.add(p.getPuuid()))
-		              .toList();
+		              .flatMap(match -> match.getParticipantList()
+		                                     .stream()
+		                                     .map(p -> Map.entry(p, match)))
+		              .collect(Collectors.groupingBy(
+				              Map.Entry::getKey,
+				              Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 	}
 
 	private void checkUpdateThrottling(Summoner summoner) {
