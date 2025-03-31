@@ -38,3 +38,4 @@ voidapp:
     delay: 2
   processingQueue:
     basicSummonerFetch: false
+    trophyRoomProcessing: false

@@ -34,5 +34,6 @@ voidapp:
     enabled: true
     delay: 2 # Update summoner delay in minutes
   processingQueue:
-    fixedDelay: 10000 # Delay between finished task 1 and start task 2
+    fixedDelay: 6000 # Delay between finished task 1 and start task 2
     basicSummonerFetch: true
+    trophyRoomProcessing: true

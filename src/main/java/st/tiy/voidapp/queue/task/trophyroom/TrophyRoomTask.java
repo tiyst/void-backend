@@ -5,7 +5,7 @@ import st.tiy.voidapp.queue.task.VoidTaskPriority;
 
 public class TrophyRoomTask extends VoidTask<TrophyRoomTaskParameters> {
 
-	protected TrophyRoomTask(TrophyRoomTaskParameters taskParameters) {
+	public TrophyRoomTask(TrophyRoomTaskParameters taskParameters) {
 		super(taskParameters, VoidTaskPriority.HIGHER);
 	}
 

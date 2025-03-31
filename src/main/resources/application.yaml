@@ -33,3 +33,4 @@ voidapp:
   processingQueue:
     fixedDelay: 5000
     basicSummonerFetch: true
+    trophyRoomProcessing: true

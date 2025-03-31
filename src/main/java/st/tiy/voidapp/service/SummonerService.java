@@ -21,6 +21,8 @@ import st.tiy.voidapp.model.mapper.RiotSummonerMapper;
 import st.tiy.voidapp.queue.TaskQueueService;
 import st.tiy.voidapp.queue.task.summonerfetch.BasicSummonerProcessTask;
 import st.tiy.voidapp.queue.task.summonerfetch.BasicSummonerProcessTaskParams;
+import st.tiy.voidapp.queue.task.trophyroom.TrophyRoomTask;
+import st.tiy.voidapp.queue.task.trophyroom.TrophyRoomTaskParameters;
 import st.tiy.voidapp.repository.SummonerRepository;
 import st.tiy.voidapp.trophy.TrophyRoomService;
 import st.tiy.voidapp.trophy.trophies.Trophy;
@@ -141,14 +143,25 @@ public class SummonerService {
 
 	private void submitBasicFetchTasks(Server server, Map<Participant, List<Match>> participants) {
 		participants.forEach((participant, matches) ->
-				taskQueueService.submitTask(new BasicSummonerProcessTask(
-						BasicSummonerProcessTaskParams.builder()
-						                              .server(server)
-						                              .gameName(participant.getRiotIdGameName())
-						                              .tagLine(participant.getRiotIdTagline())
-						                              .matches(matches)
-						                              .build()
-				)));
+		{
+			BasicSummonerProcessTask task = new BasicSummonerProcessTask(
+					BasicSummonerProcessTaskParams.builder()
+					                              .server(server)
+					                              .gameName(participant.getRiotIdGameName())
+					                              .tagLine(participant.getRiotIdTagline())
+					                              .matches(matches)
+					                              .build()
+			);
+			TrophyRoomTask trophyTask = new TrophyRoomTask(
+					TrophyRoomTaskParameters.builder()
+							.matches(matches)
+							.puuid(participant.getPuuid())
+							.build()
+			);
+			taskQueueService.submitTask(task);
+			taskQueueService.submitTask(trophyTask);
+		});
+
 	}
 
 	private Summoner fetchBasicSummonerInfo(Server server, String gameName, String tagLine) {
