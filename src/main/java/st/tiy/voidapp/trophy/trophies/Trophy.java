@@ -50,14 +50,12 @@ public abstract class Trophy {
 	protected Trophy() {} // For JPA
 
 	public void updateBestMatch(Match newMatch) {
-		if (bestMatch == null || !isNewMatchBetterThanCurrentBest(newMatch)) {
-			if (bestMatch != null) {
-				this.bestMatch.getTrophiedPuuids().remove(summoner.getPuuid());
-			}
-			this.bestMatch = newMatch;
-			this.bestValue = getFormattedBestValue(newMatch);
-			newMatch.getTrophiedPuuids().add(summoner.getPuuid());
+		if (bestMatch != null) {
+			this.bestMatch.getTrophiedPuuids().remove(summoner.getPuuid());
 		}
+		this.bestMatch = newMatch;
+		this.bestValue = getFormattedBestValue(newMatch);
+		newMatch.getTrophiedPuuids().add(summoner.getPuuid());
 	}
 
 	public abstract String getFormattedBestValue(Match match);
