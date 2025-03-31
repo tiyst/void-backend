@@ -30,7 +30,7 @@ public class TrophyMostKills extends Trophy {
 			return true;
 		}
 
-		return matchComparator().compare(newMatch, this.bestMatch) < 0;
+		return matchComparator().compare(newMatch, this.bestMatch) > 0;
 	}
 
 	@Override

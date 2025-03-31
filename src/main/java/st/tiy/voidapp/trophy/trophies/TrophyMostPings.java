@@ -26,7 +26,7 @@ public class TrophyMostPings extends Trophy {
 	public boolean isNewMatchBetterThanCurrentBest(Match newMatch) {
 		if (this.bestMatch == null) { return true; }
 
-		return matchComparator().compare(newMatch, this.bestMatch) < 0;
+		return matchComparator().compare(newMatch, this.bestMatch) > 0;
 	}
 
 	@Override
