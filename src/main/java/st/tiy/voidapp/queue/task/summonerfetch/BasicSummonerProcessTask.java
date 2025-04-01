@@ -8,7 +8,7 @@ import st.tiy.voidapp.queue.task.VoidTaskPriority;
 public class BasicSummonerProcessTask extends VoidTask<BasicSummonerProcessTaskParams> {
 
 	public BasicSummonerProcessTask(BasicSummonerProcessTaskParams parameters) {
-		super(parameters, VoidTaskPriority.LOW);
+		super(parameters, VoidTaskPriority.MEDIUM);
 	}
 
 }

@@ -154,7 +154,7 @@ public class SummonerService {
 			);
 			TrophyRoomTask trophyTask = new TrophyRoomTask(
 					TrophyRoomTaskParameters.builder()
-							.matches(matches)
+							.matchIds(matches.stream().map(Match::getMatchId).toList())
 							.puuid(participant.getPuuid())
 							.build()
 			);
