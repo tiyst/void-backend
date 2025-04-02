@@ -12,7 +12,7 @@ import java.util.Optional;
 public class TrophyUtils {
 
 	public static double extractKdaFromMatchForSummoner(Match match, String puuid) {
-		if (match == null) {
+		if (match == null || isMatchArena(match)) {
 			return 0;
 		}
 		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
@@ -21,7 +21,7 @@ public class TrophyUtils {
 		                  .orElse(0d);
 	}
 	public static int extractDamageFromMatchForSummoner(Match match, String puuid) {
-		if (match == null || isGameArena(match)) {
+		if (match == null || isMatchArena(match)) {
 			return 0;
 		}
 		Optional<Participant> participant = extractParticipantFromMatch(match, puuid);
@@ -31,7 +31,7 @@ public class TrophyUtils {
 	}
 
 	public static int extractTimeSpentDeadFromMatch(Match match, String puuid) {
-		if (match == null || isGameArena(match)) {
+		if (match == null || isMatchArena(match)) {
 			return 0;
 		}
 
@@ -40,7 +40,7 @@ public class TrophyUtils {
 	}
 
 	public static int extractSpellUsageFromMatch(Match match, String puuid) {
-		if (match == null || isGameArena(match)) {
+		if (match == null || isMatchArena(match)) {
 			return 0;
 		}
 
@@ -100,7 +100,7 @@ public class TrophyUtils {
 		return Math.round(kda * 100.0d) / 100.0d;
 	}
 
-	private static boolean isGameArena(Match match) {
+	private static boolean isMatchArena(Match match) {
 		if (match == null) {
 			return false;
 		}
