@@ -63,7 +63,6 @@ public class TrophyRoomService {
 
 		if (trophy.isNewMatchBetterThanCurrentBest(bestNewMatch)) {
 			trophy.updateBestMatch(bestNewMatch);
-			matchRepository.save(bestNewMatch);
 		}
 	}
 }
