@@ -37,3 +37,9 @@ voidapp:
     fixedDelay: 6000 # Delay between finished task 1 and start task 2
     basicSummonerFetch: true
     trophyRoomProcessing: true
+
+void-cors:
+  allowed-origins:
+    - https://tiy.st
+    - https://oldvoid.tiy.st
+    - https://void.tiy.st

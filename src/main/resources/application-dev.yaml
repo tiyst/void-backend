@@ -39,3 +39,7 @@ voidapp:
   processingQueue:
     basicSummonerFetch: false
     trophyRoomProcessing: false
+
+void-cors:
+  allowed-origins:
+    - http://localhost:5173 # Vite default
