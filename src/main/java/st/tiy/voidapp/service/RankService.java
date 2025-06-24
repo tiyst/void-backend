@@ -28,8 +28,8 @@ public class RankService {
 		return this.rankRepository.findBySummonerSummonerId(summonerId);
 	}
 
-	public List<Rank> pullRanksBySummonerId(Server server, String summonerId) {
-		RiotLeagueEntryDTO[] url = apiClient.getRankEntries(server, summonerId);
+	public List<Rank> pullRanksBySummonedPuuid(Server server, String puuid) {
+		RiotLeagueEntryDTO[] url = apiClient.getRankEntries(server, puuid);
 
 		return Arrays.stream(url)
 		             .map(this.riotRankMapper::mapToRank)

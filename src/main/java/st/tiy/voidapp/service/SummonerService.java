@@ -118,7 +118,9 @@ public class SummonerService {
 		Map<Participant, List<Match>> matchParticipants = filterUniqueSummonersFromMatches(matches);
 		submitBasicFetchTasks(server, matchParticipants);
 
+		log.info("Mapping started by gameName: {}, tagLine: {}", gameName, tagLine);
 		DtoSummoner dtoSummoner = dtoSummonerMapper.toDtoSummoner(summoner, matches, trophies);
+		log.info("Mapping finished by gameName: {}, tagLine: {}", gameName, tagLine);
 
 		log.info("Update summoner by gameName: {}, tagLine: {} finished.", gameName, tagLine);
 		return dtoSummoner;
@@ -206,7 +208,7 @@ public class SummonerService {
 	}
 
 	private List<Rank> pullRanks(Server server, Summoner summoner) {
-		List<Rank> ranks = this.rankService.pullRanksBySummonerId(server, summoner.getSummonerId());
+		List<Rank> ranks = this.rankService.pullRanksBySummonedPuuid(server, summoner.getPuuid());
 		ranks.forEach(rank -> rank.setSummoner(summoner));
 
 		return ranks;

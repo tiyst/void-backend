@@ -55,8 +55,8 @@ public class RiotApiClient {
 		return restTemplate.getForObject(summonerUrl, RiotSummonerDTO.class);
 	}
 
-	public RiotLeagueEntryDTO[] getRankEntries(Server server, String summonerId) {
-		String rankUrl = RANK_BASE_URL.formatted(server, summonerId);
+	public RiotLeagueEntryDTO[] getRankEntries(Server server, String puuid) {
+		String rankUrl = RANK_BASE_URL.formatted(server, puuid);
 
 		RiotLeagueEntryDTO[] response = restTemplate.getForObject(rankUrl, RiotLeagueEntryDTO[].class);
 

@@ -22,9 +22,9 @@ public class RankController {
 		this.rankService = rankService;
 	}
 
-	@GetMapping(path = "/{server}/{summonerId}")
-	public List<Rank> getRanksBySummonerId(@PathVariable(name = "server") Server server, @PathVariable(name = "summonerId") String summonerId) {
-		return this.rankService.pullRanksBySummonerId(server, summonerId);
+	@GetMapping(path = "/{server}/{puuid}")
+	public List<Rank> getRanksBySummonerPuuid(@PathVariable(name = "server") Server server, @PathVariable(name = "puuid") String puuid) {
+		return this.rankService.pullRanksBySummonedPuuid(server, puuid);
 	}
 
 }
