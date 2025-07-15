@@ -11,7 +11,7 @@ import st.tiy.voidapp.model.dto.match.DtoPerks;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DtoChallengesMapper.class})
 public interface DtoMatchMapper {
 
 	List<DtoMatch> toDtoMatches(List<Match> matches);
@@ -28,7 +28,6 @@ public interface DtoMatchMapper {
 	@Mapping(target = "baronKills", ignore = true)
 	@Mapping(target = "basicPings", ignore = true)
 	@Mapping(target = "bountyLevel", ignore = true)
-	@Mapping(target = "challenges", ignore = true)
 	@Mapping(target = "champExperience", ignore = true)
 	@Mapping(target = "championTransform", ignore = true)
 	@Mapping(target = "commandPings", ignore = true)
@@ -85,10 +84,8 @@ public interface DtoMatchMapper {
 	@Mapping(target = "timePlayed", ignore = true)
 	@Mapping(target = "totalAllyJungleMinionsKilled", ignore = true)
 	@Mapping(target = "totalDamageShieldedOnTeammates", ignore = true)
-	@Mapping(target = "totalDamageTaken", ignore = true)
 	@Mapping(target = "totalEnemyJungleMinionsKilled", ignore = true)
 	@Mapping(target = "totalHeal", ignore = true)
-	@Mapping(target = "totalHealsOnTeammates", ignore = true)
 	@Mapping(target = "totalTimeCCDealt", ignore = true)
 	@Mapping(target = "totalTimeSpentDead", ignore = true)
 	@Mapping(target = "totalUnitsHealed", ignore = true)
@@ -101,5 +98,6 @@ public interface DtoMatchMapper {
 	@Mapping(target = "visionWardsBoughtInGame", ignore = true)
 	@Mapping(target = "wardsKilled", ignore = true)
 	@Mapping(target = "wardsPlaced", ignore = true)
+	@Mapping(target = "challenges", source = "challenges")
 	DtoParticipant toDtoParticipant(Participant participant);
 }

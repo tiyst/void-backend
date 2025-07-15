@@ -19,7 +19,6 @@ import java.util.Map;
 		"baronKills",
 		"basicPings",
 		"bountyLevel",
-		"challenges",
 		"champExperience",
 		"championTransform",
 		"commandPings",
@@ -45,10 +44,8 @@ import java.util.Map;
 		"individualPosition",
 		"inhibitorKills",
 		"inhibitorTakedowns",
-		"inhibitorsLost",
 		"killingSprees",
 		"lane",
-		"largestCriticalStrike",
 		"largestKillingSpree",
 		"largestMultiKill",
 		"longestTimeSpentLiving",
@@ -57,8 +54,6 @@ import java.util.Map;
 		"nexusKills",
 		"nexusLost",
 		"nexusTakedowns",
-		"objectivesStolen",
-		"objectivesStolenAssists",
 		"onMyWayPings",
 		"physicalDamageTaken",
 		"pushPings",
@@ -76,10 +71,8 @@ import java.util.Map;
 		"timePlayed",
 		"totalAllyJungleMinionsKilled",
 		"totalDamageShieldedOnTeammates",
-		"totalDamageTaken",
 		"totalEnemyJungleMinionsKilled",
 		"totalHeal",
-		"totalHealsOnTeammates",
 		"totalTimeCCDealt",
 		"totalTimeSpentDead",
 		"totalUnitsHealed",
@@ -94,7 +87,6 @@ import java.util.Map;
 		"wardsPlaced"
 })
 public class DtoParticipant {
-
 	private int allInPings;
 	private int assistMePings;
 	private int assists;
